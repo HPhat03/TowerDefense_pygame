@@ -1,6 +1,6 @@
 import pygame
 from scenes import Scenes
-from scenes.game import Gam
+from scenes.game import Game
 from scenes.menu import Menu
 from setting import *
 pygame.init()
