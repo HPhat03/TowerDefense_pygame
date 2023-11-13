@@ -1,5 +1,5 @@
 import pygame
-from . import Scene, Scenes
+from scenes import Scene, Scenes
 
 
 class Game(Scene):
