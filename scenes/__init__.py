@@ -10,16 +10,16 @@ class Scenes:
 class Scene:
     @staticmethod
     @abstractmethod
-    def event_handler(event):
+    def event_handler(event, login):
         pass
 
     @staticmethod
     @abstractmethod
-    def game(screen):
+    def game(screen, login):
         pass
 
     @classmethod
-    def run(cls, screen):
+    def run(cls, screen, login):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -30,8 +30,8 @@ class Scene:
                                 event.key == pygame.K_q):
                         pygame.quit()
                     else:
-                        if (tmp := cls.event_handler(event)) is not None:
+                        if (tmp := cls.event_handler(event, login)) is not None:
                             return tmp
-            cls.game(screen)
+            cls.game(screen, login)
             pygame.display.update()
 

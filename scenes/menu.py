@@ -17,28 +17,28 @@ class Menu(Scene):
     NameTextbox = TextBox(setting.WINDOW_WIDTH-320,20,300,50)
     NotiLabel = Label(NameTextbox.rect.left,NameTextbox.rect.top+NameTextbox.rect.height+10,NameTextbox.rect.width,NameTextbox.rect.height,text='',color= "red")
 
-    login = Player()
+    #login = Player()
 
     controls = pygame.sprite.Group()
     controls.add(PlayButton,LogoImage,ShopButton,InventoryButton, NameTextbox, NotiLabel)
 
     @staticmethod
-    def event_handler(event):
+    def event_handler(event, login):
         if event.type == pygame.KEYDOWN :
-            if event.key == pygame.K_s:
+            if event.key == pygame.K_s and login.isAuth:
                 return Scenes.GAME
         return None
 
     @staticmethod
-    def game(screen):
+    def game(screen, login):
         Menu.background = pygame.transform.scale(Menu.background,(setting.WINDOW_WIDTH,setting.WINDOW_HEIGHT))
         screen.blit(Menu.background,(0,0))
         for c in Menu.controls:
             c.draw(screen)
             c.displayEffect()
-        Menu.login.authenticate(Menu.NameTextbox.text)
-        if Menu.login.isAuth:
-            Menu.NotiLabel.text = f"Welcome {Menu.login.name}"
+        login.authenticate(Menu.NameTextbox.text)
+        if login.isAuth:
+            Menu.NotiLabel.text = f"Welcome {login.name}"
             Menu.NotiLabel.color = "yellow"
             Menu.NotiLabel.bgcolor= "black"
             if Menu.PlayButton.isClicked():
