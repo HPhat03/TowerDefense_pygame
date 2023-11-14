@@ -1,11 +1,5 @@
-def foo(func):
-    def inner():
-        print("foo")
-        func()
-    return inner
+from src.utils.database import Database
 
-@foo
-def bar():
-    print("bar")
-
-bar()
+db = Database()
+l = db.select("select * from Player where name = ?", ("QuyThanh", ))
+print(len(l))

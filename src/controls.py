@@ -1,7 +1,9 @@
 import pygame as pg
 import pygame.sprite
 
-from src import setting
+from src import setting, db
+
+pg.font.init()
 
 class Control(pygame.sprite.Sprite):
     def __init__(self):
@@ -15,63 +17,62 @@ class Control(pygame.sprite.Sprite):
     def draw(self, surface):
         pass
 
+    def displayEffect(self):
+        pass
+
     def draw_text(self, surface):
         self.text_display = setting.FONT.render(self.text, True, self.color)
         self.text_rect = self.text_display.get_rect(center=self.rect.center)
         surface.blit(self.text_display, self.text_rect)
 
-    def isHovering(self):
-        return self.rect.collidepoint(pg.mouse.get_pos()) and \
-            pg.mouse.get_pressed()[0] == 0
-
 
 class Button(Control):
-    def __init__(self, left, top, width, height, text="new button", border_radius=5, bgcolor="white", color="black"):
+    def __init__(self, left, top, width, height, text="new button", \
+                 border_radius=5, bgcolor="white", color="black"):
         super().__init__()
         self.rect = pg.Rect(left, top, width, height)
         self.text = text
         self.color = color
-        self.bgcolor = bgcolor
+        self.bgcolor=bgcolor
         self.radius = border_radius
         self.clicked = False
+        self.default_bg = bgcolor
+        self.default_cl = color
 
     def draw(self, surface):
-        pg.draw.rect(surface, self.bgcolor, self.rect, border_radius=self.radius)
+        pg.draw.rect(surface, self.bgcolor, self.rect, \
+                     border_radius=self.radius)
         self.draw_text(surface)
-        self.handle()
 
     def isClicked(self):
-        if self.rect.collidepoint(pg.mouse.get_pos()):
-            if pg.mouse.get_pressed()[0] == 0:
-                self.clicked = False
-            if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
-                return True
-        else:
+        if not self.rect.collidepoint(pg.mouse.get_pos()):
             return False
-        
-    def handleHover(self, newHandle=None):
-        def inner():
-            if newHandle is not None:
-                newHandle()
-            else:
-                if self.isHovering():
-                    self.bgcolor = (42, 186, 103)
-                    self.color = "white"
 
-        return inner
-    
-    def handle(self):
-        self.handleHover()
+        if pg.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+        if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
+            self.clicked=True
+            return True
 
-        if not self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.bgcolor = "white"
-            self.color = (42, 186, 103)
+    def isHovering(self):
+        return self.rect.collidepoint(pg.mouse.get_pos()) and \
+            pg.mouse.get_pressed()[0] == 0
 
+    def displayEffect(self):
+        if self.isHovering():
+            self.bgcolor = setting.button_color
+            self.color = "white"
+        elif self.isClicked():
+            self.clicked = False
+            self.bgcolor = "red"
+            self.color = "white"
+        elif not self.rect.collidepoint(pg.mouse.get_pos()):
+            self.bgcolor = self.default_bg
+            self.color = self.default_cl
 
 class TextBox(Control):
     def __init__(self, left, top, width, height, border_radius=3, \
-                bgcolor="white", color="black"):
+                 bgcolor="white", color="black"):
         super().__init__()
         self.rect = pg.Rect(left, top, width, height)
         self.radius = border_radius
@@ -89,15 +90,17 @@ class TextBox(Control):
                     case pg.KEYDOWN:
                         if e.key == pg.K_BACKSPACE:
                             self.text = self.text[:-1]
-                        elif self.text_rect.width < self.rect.width - \
-                                setting.FONT.__sizeof__() and e.key \
-                                    not in {pg.K_TAB, pg.K_RETURN}:
+                        elif self.text_rect.width < self.rect.width - setting.FONT.__sizeof__() and e.key not in {pg.K_TAB, pg.K_RETURN}:
                             self.text += e.unicode
-                    case pg.QUIT:
-                        pg.quit()
-                    case pg.KEYDOWN:
-                        if e.key in {pg.K_RETURN, pg.K_TAB}:
+                        if e.key == pg.K_RETURN:
                             self.focus = False
+                        print('.')
+                        # self.focus = e.key in {pg.K_RETURN, pg.K_TAB}
+
+                    case pg.QUIT:
+                        db.close()
+                        quit()
+                        
             self.setFocus()
             pg.draw.rect(surface, self.bgcolor, self.rect, border_radius=self.radius)
             self.draw_text(surface)
@@ -109,6 +112,7 @@ class TextBox(Control):
             self.focus = self.rect.collidepoint(pg.mouse.get_pos())
         self.bgcolor = "grey" if self.focus else "white"
 
+
 class PictureBox(Control):
     def __init__(self, left, top, width, height, img_path):
         super().__init__()
@@ -119,3 +123,17 @@ class PictureBox(Control):
         self.image = pg.image.load(self.img_path).convert_alpha()
         self.image = pg.transform.scale(self.image, (self.rect.width, self.rect.height))
         surface.blit(self.image, (self.rect.left, self.rect.top))
+
+class Label(Control):
+    def __init__(self, left, top, width, height, text="new label", bgcolor = None, color = "black", border_radius = 10):
+        super().__init__()
+        self.rect = pg.Rect(left, top, width, height)
+        self.text = text
+        self.bgcolor = bgcolor
+        self.color = color
+        self.radius = border_radius
+
+    def draw(self, surface):
+        if self.bgcolor != None:
+            pg.draw.rect(surface, self.bgcolor, self.rect, border_radius=self.radius)
+        self.draw_text(surface)

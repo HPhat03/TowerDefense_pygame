@@ -13,19 +13,19 @@ class Database:
     """
 
     def __init__(self):
-        self.connect = sqlite3.connect("data/tower_defense.db")
-        self.cursor = self.connect.cursor()
+        self.__connect = sqlite3.connect("src/data/tower_defense.db")
+        self.__cursor = self.__connect.cursor()
 
     def select(self, query: str, params: tuple = ()) -> list[tuple]:
-        self.cursor.execute(query, params)
-        return self.cursor.fetchall()
+        self.__cursor.execute(query, params)
+        return self.__cursor.fetchall()
 
     def execute(self, query: str, params: tuple = ()) -> bool:
-        self.cursor.execute(query, params)
-        self.connect.commit()
-        return self.cursor.rowcount > 0
+        self.__cursor.execute(query, params)
+        self.__connect.commit()
+        return self.__cursor.rowcount > 0
 
     def close(self) -> None:
-        self.cursor.close()
-        self.connect.close()
+        self.__cursor.close()
+        self.__connect.close()
 
