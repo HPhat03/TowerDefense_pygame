@@ -1,12 +1,16 @@
 
 import pygame as pg
 import sys
+
+import pygame.sprite
+
 import setting
 
 pg.font.init()
 
-class Control:
+class Control(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         self.text = ''
         self.color = ''
     class Meta:
@@ -21,6 +25,7 @@ class Control:
 
 class Button(Control):
     def __init__(self, left,top,width,height,text="new button",border_radius=5,bgcolor="white",color="black"):
+        super().__init__()
         self.rect = pg.Rect(left,top,width,height)
         self.text = text
         self.color = color
@@ -49,6 +54,7 @@ class Button(Control):
 
 class TextBox(Control):
     def __init__(self, left,top,width,height,border_radius=3,bgcolor="white",color="black"):
+        super().__init__()
         self.rect = pg.Rect(left,top,width,height)
         self.radius = border_radius
         self.text = ''
@@ -65,15 +71,15 @@ class TextBox(Control):
                         self.text = self.text[:-1]
                     elif(self.text_rect.width < self.rect.width-setting.FONT.__sizeof__() and e.key not in {pg.K_TAB,pg.K_RETURN}):
                         self.text+= e.unicode
-                    print(self.focus)
                 if e.type == pg.QUIT:
                     pg.quit()
                 if e.type == pg.KEYDOWN:
                     if e.key in {pg.K_RETURN, pg.K_TAB}:
                         self.focus = False
             self.setFocus()
-            pg.draw.rect(surface, self.bgcolor, self.rect)
+            pg.draw.rect(surface, self.bgcolor, self.rect, border_radius=self.radius)
             self.draw_text(surface)
+            pg.display.update()
         self.draw_text(surface)
 
     def setFocus(self):
@@ -87,8 +93,9 @@ class TextBox(Control):
             else:
                 self.bgcolor = "white"
 
-class PictureBox:
+class PictureBox(Control):
     def __init__(self,left,top,width,height,img_path):
+        super().__init__()
         self.rect = pg.Rect(left,top,width,height)
         self.img_path = img_path
     def draw(self,surface):

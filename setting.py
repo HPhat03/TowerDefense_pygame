@@ -13,3 +13,4 @@ FPS = 60
 #OTHER SETING
 pg.font.init()
 FONT = pg.font.Font("Fonts/Baloo2.ttf", 32)
+button_color = (42,186,103)
