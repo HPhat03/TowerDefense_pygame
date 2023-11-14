@@ -17,6 +17,8 @@ class Control(pygame.sprite.Sprite):
         abstract = True
     def draw(self,surface):
         pass
+    def displayEffect(self):
+        pass
     def draw_text(self,surface):
         self.text_display = setting.FONT.render(self.text, True, self.color)
         self.text_rect = self.text_display.get_rect(center=self.rect.center)
@@ -32,6 +34,8 @@ class Button(Control):
         self.bgcolor=bgcolor
         self.radius = border_radius
         self.clicked = False
+        self.default_bg = bgcolor
+        self.default_cl = color
 
     def draw(self, surface):
         pg.draw.rect(surface,self.bgcolor,self.rect,border_radius=self.radius)
@@ -51,6 +55,18 @@ class Button(Control):
             return True
         else:
             return False
+
+    def displayEffect(self):
+        if self.isHovering():
+            self.bgcolor = setting.button_color
+            self.color = "white"
+        elif self.isClicked():
+            self.clicked = False
+            self.bgcolor = "red"
+            self.color = "white"
+        elif not self.rect.collidepoint(pg.mouse.get_pos()):
+            self.bgcolor = self.default_bg
+            self.color = self.default_cl
 
 class TextBox(Control):
     def __init__(self, left,top,width,height,border_radius=3,bgcolor="white",color="black"):
@@ -92,6 +108,13 @@ class TextBox(Control):
                 self.bgcolor = "grey"
             else:
                 self.bgcolor = "white"
+    def isEnter(self):
+        if self.focus:
+            for e in pg.event.get():
+                if e.type == pg.KEYDOWN:
+                    if e.key in {pg.K_RETURN}:
+                        return True
+        return False
 
 class PictureBox(Control):
     def __init__(self,left,top,width,height,img_path):
@@ -102,3 +125,17 @@ class PictureBox(Control):
         self.image = pg.image.load(self.img_path).convert_alpha()
         self.image = pg.transform.scale(self.image,(self.rect.width,self.rect.height))
         surface.blit(self.image,(self.rect.left,self.rect.top))
+
+class Label(Control):
+    def __init__(self,left,top,width,height,text="new label",bgcolor = None, color = "black", border_radius = 10):
+        super().__init__()
+        self.rect = pg.Rect(left,top,width,height)
+        self.text = text
+        self.bgcolor = bgcolor
+        self.color = color
+        self.radius = border_radius
+
+    def draw(self, surface):
+        if self.bgcolor!= None:
+            pg.draw.rect(surface,self.bgcolor,self.rect, border_radius=self.radius)
+        self.draw_text(surface)
