@@ -1,5 +1,5 @@
 import pygame
-from scenes import Scene, Scenes
+from . import Scene, Scenes
 
 
 class Game(Scene):
@@ -13,3 +13,4 @@ class Game(Scene):
     @staticmethod
     def game(screen):
         screen.fill("red")
+        return None

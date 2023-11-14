@@ -5,6 +5,8 @@ from abc import abstractmethod
 class Scenes:
     MENU = 1
     GAME = 2
+    SHOP = 3
+    INVENTORY = 4
 
 
 class Scene:
@@ -22,16 +24,17 @@ class Scene:
     def run(cls, screen):
         while True:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
+                if event.type == pygame.QUIT: quit()
                 elif event.type == pygame.KEYDOWN:
                     if event.mod & pygame.KMOD_CTRL and \
                             (event.key == pygame.K_w or
                                 event.key == pygame.K_q):
-                        pygame.quit()
+                        quit()
                     else:
                         if (tmp := cls.event_handler(event)) is not None:
                             return tmp
-            cls.game(screen)
+            
+            if (tmp := cls.game(screen)) is not None:
+                return tmp
             pygame.display.update()
 
