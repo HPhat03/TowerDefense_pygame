@@ -6,11 +6,11 @@ from Controls import Button, PictureBox, TextBox
 
 
 class Menu(Scene):
-    background = pygame.image.load("Assets/bgMenu.png")
+    background = pygame.image.load("assets/bgMenu.png")
     PlayButton = Button(175, 300, 200, 50, "Play", color=setting.button_color)
     ShopButton= Button(PlayButton.rect.left, PlayButton.rect.top+PlayButton.rect.height+25, PlayButton.rect.width,PlayButton.rect.height, "Shop", color=setting.button_color)
     InventoryButton= Button(ShopButton.rect.left, ShopButton.rect.top+ShopButton.rect.height+25, ShopButton.rect.width,ShopButton.rect.height, "Inventory", color=setting.button_color)
-    LogoImage = PictureBox(100, 50, 360, 250, "Assets/Logo.png")
+    LogoImage = PictureBox(100, 50, 360, 250, "assets/Logo.png")
     NameTextbox = TextBox(setting.WINDOW_WIDTH-320,20,300,50)
     controls = pygame.sprite.Group()
     controls.add(PlayButton,LogoImage,ShopButton,InventoryButton, NameTextbox)
