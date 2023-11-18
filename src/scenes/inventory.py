@@ -2,7 +2,7 @@ import pygame
 from .core import Scene, Scenes
 
 
-class Game(Scene):
+class Inventory(Scene):
     @staticmethod
     def event_handler(event, login):
         if event.type == pygame.KEYDOWN:
