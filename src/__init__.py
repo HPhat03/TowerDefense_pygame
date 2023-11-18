@@ -10,9 +10,7 @@ db = Database()
 def main():
     from .setting import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
     from .player import Player
-    from .scenes import Scenes
-    from .scenes.game import Game
-    from .scenes.menu import Menu
+    from .scenes import Scenes, Game, Menu, Shop, Inventory
 
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     scene = Scenes.MENU
@@ -30,6 +28,6 @@ def main():
             case Scenes.GAME:
                 scene = Game.run(screen, login)
             case Scenes.SHOP:
-                scene = Game.run(screen, login)
+                scene = Shop.run(screen, login)
             case Scenes.INVENTORY:
                 scene = Game.run(screen, login)

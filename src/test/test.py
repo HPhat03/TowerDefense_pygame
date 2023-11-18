@@ -10,7 +10,7 @@ clock = pg.time.Clock()
 #Cau Hinh Control
 testButton = Button(100,100,200,100, border_radius=25)
 # testTxtBox = TextBox(100,250,300,100)
-testPB = PictureBox(100, 200, 100, 100, "Assets/png/Default size/towerDefense_tile250.png")
+testPB = PictureBox(100, 200, 100, 100, "src/assets/png/Default size/towerDefense_tile250.png")
 testlabel = Label(200,200, 200, 50, "Hello")
 
 running =True
