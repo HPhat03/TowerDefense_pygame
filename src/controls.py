@@ -123,10 +123,12 @@ class PictureBox(Control):
         self.img_path = img_path
 
     def draw(self, surface):
-        self.image = pg.image.load(self.img_path).convert_alpha()
-        self.image = pg.transform.scale(self.image, (self.rect.width, self.rect.height))
-        surface.blit(self.image, (self.rect.left, self.rect.top))
-
+        if self.img_path != "":
+            self.image = pg.image.load(self.img_path).convert_alpha()
+            self.image = pg.transform.scale(self.image, (self.rect.width, self.rect.height))
+            surface.blit(self.image, (self.rect.left, self.rect.top))
+        else:
+            pg.draw.rect(surface, "black", self.rect)
 class Label(Control):
     def __init__(self, left, top, width, height, text="new label", bgcolor = None, color = "black", border_radius = 10, size = setting.DEFAULT_SIZE):
         super().__init__(left, top, width, height)
@@ -180,7 +182,7 @@ class ItemBox(Control):
             c.draw(surface)
 
 class ControlsContainer(Control):
-    def __init__(self, left, top, controls, padding, bgcolor = "grey"):
+    def __init__(self, left, top, controls, padding, bgcolor = "Black"):
         super().__init__(left, top, 100, 100)
         width = height = 2*padding
         maxl = maxt = 0

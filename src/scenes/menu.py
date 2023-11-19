@@ -38,8 +38,6 @@ class Menu(Scene):
         
         login.authenticate(Menu.NameTextbox.text)
 
-        if Menu.PlayButton.isClicked():
-            return Scenes.GAME
 
         if Menu.QuitButton.isClicked():
             db.close()
@@ -47,8 +45,11 @@ class Menu(Scene):
 
         if login.isAuth:
             Menu.NotiLabel.text = f"Welcome {login.name}"
-            Menu.NotiLabel.color = "yellow"
+            Menu.NotiLabel.color = "green"
             Menu.NotiLabel.bgcolor= "black"
+
+            if Menu.PlayButton.isClicked():
+                return Scenes.GAME
 
             if Menu.ShopButton.isClicked():
                 return Scenes.SHOP
