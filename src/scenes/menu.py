@@ -56,22 +56,23 @@ class Menu(Scene):
         if Menu.PlayButton.isClicked():
             return Scenes.GAME
 
-        if Menu.QuitButton.isClicked():
-            db.close()
-            quit()
+        if Menu.InventoryButton.isClicked():
+            return Scenes.INVENTORY
 
         if Menu.ShopButton.isClicked():
             return Scenes.SHOP
 
+        if Menu.QuitButton.isClicked():
+            db.close()
+            quit()
+
         if login.isAuth:
             Menu.NotiLabel.text = f"Welcome {login.name}"
             Menu.NotiLabel.color = "yellow"
-            Menu.NotiLabel.bgcolor = "black"
+            Menu.NotiLabel.background_color = "black"
 
-            if Menu.InventoryButton.isClicked():
-                return Scenes.INVENTORY
         else:
             Menu.NotiLabel.text = "USER IS NOT FOUND"
             Menu.NotiLabel.color = "red"
-            Menu.NotiLabel.bgcolor = None
+            Menu.NotiLabel.background_color = -1
         return None

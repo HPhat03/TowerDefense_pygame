@@ -3,9 +3,10 @@ import math
 import pygame as pg
 import pygame.sprite
 from abc import abstractmethod
+from typing import cast
 
 from src import setting
-from src.types import ColorValue
+from src.types import ColorValue, RGBAOutput
 
 pg.font.init()
 
@@ -15,12 +16,10 @@ class Control(pygame.sprite.Sprite):
                  background_color: ColorValue = "white",
                  color: ColorValue = "black"):
         pygame.sprite.Sprite.__init__(self)
-        self.pos = (left, top)
-        self.size = (top, width)
         self.text = text
         self.color = color
         self.background_color = background_color
-        self.rect: pg.Rect = pg.Rect(left, top, width, height)
+        self.rect = pg.Rect(left, top, width, height)
         self.clicked = False
 
     class Meta:
@@ -35,7 +34,7 @@ class Control(pygame.sprite.Sprite):
 
     def draw_text(self, surface, size=setting.DEFAULT_SIZE):
         size = math.floor(size)
-        pen = pg.font.Font("src/fonts/Baloo2.ttf",size=size)
+        pen = pg.font.Font("src/fonts/Baloo2.ttf", size=size)
         self.text_display = pen.render(self.text, True, self.color)
         self.text_rect = self.text_display.get_rect(center=self.rect.center)
         surface.blit(self.text_display, self.text_rect)
@@ -69,9 +68,10 @@ class Button(Control):
         return self.rect.collidepoint(pg.mouse.get_pos()) and \
             pg.mouse.get_pressed()[0] == 0
 
-    def displayEffect(self, HoverBGColor = setting.button_color,
-                      HoverColor = "white", ClickBGColor = "red",
-                      ClickColor = "white"):
+    def displayEffect(self, HoverBGColor: ColorValue = setting.button_color,
+                      HoverColor: ColorValue = "white",
+                      ClickBGColor: ColorValue = "red",
+                      ClickColor: ColorValue = "white"):
         if self.isHovering():
             self.background_color = HoverBGColor
             self.color = HoverColor
@@ -134,8 +134,8 @@ class PictureBox(Control):
 
 class Label(Control):
     def __init__(self, left, top, width, height, text: str = "new label",
-                 bgcolor=-1, color="black", border_radius: int = 10,
-                 size=setting.DEFAULT_SIZE):
+                 bgcolor=-1, color: ColorValue = "black",
+                 border_radius: int = 10, size=setting.DEFAULT_SIZE):
         super().__init__(left, top, width, height, text, bgcolor, color)
         self.radius = border_radius
         self.font_size = size
@@ -148,77 +148,85 @@ class Label(Control):
 
 
 class Surface(Control):
-    def __init__(self, left, top, width, height, background_color):
+    def __init__(self, left, top, width, height, background_color: RGBAOutput):
         super().__init__(left, top, width, height,
                          background_color=background_color)
         self.surf = pg.Surface((width, height))
 
     def draw(self, surface):
-        surface.blit(self.surf, (self.pos[0], self.pos[1]))
+        surface.blit(self.surf, (self.rect.left, self.rect.top))
+        *rgb, a = self.background_color
+        self.surf.fill(cast(tuple[int, int, int], rgb))
+        self.surf.set_alpha(cast(int, a))
 
 
 class ItemBox(Control):
-    def __init__(self,left,top,width,image_path, text = "Item Box", subtext = "", bgcolor = "black", color = "White", subcolor = "yellow", padding = 5, boder_radius = 0):
-        super().__init__(left, top, width, width)
+    def __init__(self, left, top, width, image_path: str,
+                 text: str = "Item Box", subtext: str = "",
+                 bgcolor: ColorValue = "black",
+                 color: ColorValue = "white", subcolor: ColorValue = "yellow",
+                 padding: int = 5, boder_radius: int = 0):
+        super().__init__(left, top, width, width, text, bgcolor, color)
         self.img = image_path
-        self.text = text
         self.subtext = subtext
-        self.color = color
         self.subcolor = subcolor
         self.padding = padding
         box = width - 2 * padding
-        self.pictureBox = PictureBox(left + padding, top + padding, box, box, image_path)
-        self.MainText = Label(left + padding, self.pictureBox.rect.top + self.pictureBox.rect.height,
-                              width - 2 * padding, width / 4, self.text, color=self.color, size=width / 5)
-        self.SubText = Label(left + padding, self.MainText.rect.top + self.MainText.rect.height - padding,
-                             width - 2 * padding, width / 4, self.subtext, color=self.subcolor, size=width / 6)
-        self.rect = pygame.Rect(left,top,width,self.pictureBox.rect.height+self.MainText.rect.height+self.SubText.rect.height+padding)
-        self.bgColor = bgcolor
+        self.pictureBox = PictureBox(left + padding, top + padding, box, box,
+                                     self.img)
+        self.mainText = Label(left + padding, self.pictureBox.rect.bottom,
+                              box, width / 4, self.text,
+                              color=self.color, size=width/5)
+        self.subText = Label(left + padding, self.mainText.rect.bottom +
+                             padding, box, width / 4, self.subtext,
+                             color=self.subcolor, size=width/6)
+        self.rect = pygame.Rect(left, top, width, self.pictureBox.rect.height +
+                                self.mainText.rect.height +
+                                self.subText.rect.height + padding)
         self.radius = boder_radius
-        self.controls = pg.sprite.Group(self.pictureBox,self.MainText,self.SubText)
+        self.controls = pg.sprite.Group()
+        self.controls.add(self.pictureBox, self.mainText, self.subText)
 
     def update_box(self):
         left = self.rect.left
         top = self.rect.top
         width = self.rect.width
         padding = self.padding
-        box = width -2 * padding
+        box = width - 2 * padding
         self.pictureBox.rect = pg.Rect(left + padding, top + padding, box, box)
-        self.MainText.rect = pg.Rect(left + padding, self.pictureBox.rect.top + self.pictureBox.rect.height,
-                          width - 2 * padding, width / 4)
-        self.SubText.rect = pg.Rect(left + padding, self.MainText.rect.top + self.MainText.rect.height - padding,
-                             width - 2 * padding, width / 4)
-
+        self.mainText.rect = pg.Rect(left + padding,
+                                     self.pictureBox.rect.bottom, box, width/4)
+        self.subText.rect = pg.Rect(left + padding, self.mainText.rect.bottom -
+                                    padding, box, width / 4)
 
     def draw(self, surface):
         self.update_box()
-        pg.draw.rect(surface,self.bgColor,self.rect, border_radius=self.radius)
+        pg.draw.rect(surface, self.background_color, self.rect,
+                     border_radius=self.radius)
         for c in self.controls:
             c.draw(surface)
 
 
 class ControlsContainer(Control):
-    def __init__(self, left, top, controls, padding, bgcolor = "grey"):
-        super().__init__(left, top, 100, 100)
-        width = height = 2*padding
+    def __init__(self, left, top, controls, padding,
+                 bgcolor: ColorValue = "grey"):
+        super().__init__(left, top, 100, 100, background_color=bgcolor)
+        width = height = 2 * padding
         maxl = maxt = 0
-        w=h=0
+        w = h = 0
         self.controls = controls
         for c in controls:
-            c.rect.top = c.rect.top + top
-            c.rect.left = c.rect.left + left
+            c.rect.top += top
+            c.rect.left += left
             if c.rect.left > maxl:
-                maxl = c.rect.left
-                w = c.rect.width
+                maxl, w = c.rect.left, c.rect.width
             if c.rect.top > maxt:
-                maxt = c.rect.top
-                h = c.rect.height
-        width = 2*padding + maxl - left + w
-        height = 2*padding + maxt - top + h
-        self.rect = pg.Rect(left,top,width,height)
-        self.bgcolor = bgcolor
+                maxt, h = c.rect.top, c.rect.height
+        width = 2 * padding + maxl - left + w
+        height = 2 * padding + maxt - top + h
+        self.rect = pg.Rect(left, top, width, height)
 
     def draw(self, surface):
-        pg.draw.rect(surface,self.bgcolor,self.rect)
+        pg.draw.rect(surface, self.background_color, self.rect)
         for c in self.controls:
             c.draw(surface)

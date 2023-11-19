@@ -30,4 +30,4 @@ def main():
             case Scenes.SHOP:
                 scene = Shop.run(screen, login)
             case Scenes.INVENTORY:
-                scene = Game.run(screen, login)
+                scene = Inventory.run(screen, login)

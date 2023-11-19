@@ -1,23 +1,39 @@
 import pygame
 
-from src.controls import Label, PictureBox
+from src.controls import ItemBox, Label, PictureBox, Surface
 from .core import Scene, Scenes
-from src import setting
+from src.setting import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class Shop(Scene):
     background = pygame.image.load("src/assets/shop_bg.jpg")
+    controls = pygame.sprite.Group()
 
     btnBack = PictureBox(20, 20, 100, 50, "src/assets/Logo.png")
-    title = Label((setting.WINDOW_WIDTH - 100) / 2, 20, 100, 40, "SHOP",
+    title = Label((WINDOW_WIDTH - 100) / 2, 20, 100, 40, "SHOP",
                   color="white")
 
-    surf = pygame.Surface((setting.WINDOW_WIDTH - 40,
-                           setting.WINDOW_HEIGHT - 110))
-    box = pygame.Rect(40, 100, 100, 150)
+    surf = Surface(20, 80, WINDOW_WIDTH - 40, WINDOW_HEIGHT - 110,
+                   (0, 0, 0, 128))
 
-    controls = pygame.sprite.Group()
-    controls.add(btnBack, title)
+    towers = [
+        {
+            "name": "scout",
+            "price": 200
+        },
+        {
+            "name": "sniper",
+            "price": 250
+        }
+    ]
+
+    controls.add(surf, btnBack, title)
+
+    for i, t in enumerate(towers):
+        box = ItemBox(40 + 160*i, 100, 150,
+                      "src/assets/towers/towerDefense_tile250.png",
+                      t["name"], f"{t['price']} $")
+        controls.add(box)
 
     @staticmethod
     def event_handler(event, login):
@@ -29,17 +45,12 @@ class Shop(Scene):
     @staticmethod
     def game(screen, login):
         Shop.background = pygame.transform.scale(
-            Shop.background, (setting.WINDOW_WIDTH, setting.WINDOW_HEIGHT))
+            Shop.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         screen.blit(Shop.background, (0, 0))
-        screen.blit(Shop.surf, (20, 80))
 
         for c in Shop.controls:
             c.draw(screen)
             c.displayEffect()
-
-        Shop.surf.fill((0, 0, 0))
-        Shop.surf.set_alpha(128)
-        pygame.draw.rect(screen, "white", Shop.box)
 
         if Shop.btnBack.isClicked():
             return Scenes.MENU
