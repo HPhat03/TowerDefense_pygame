@@ -53,9 +53,6 @@ class Menu(Scene):
 
         login.authenticate(Menu.NameTextbox.text)
 
-        if Menu.PlayButton.isClicked():
-            return Scenes.GAME
-
         if Menu.InventoryButton.isClicked():
             return Scenes.INVENTORY
 
@@ -68,9 +65,17 @@ class Menu(Scene):
 
         if login.isAuth:
             Menu.NotiLabel.text = f"Welcome {login.name}"
-            Menu.NotiLabel.color = "yellow"
+            Menu.NotiLabel.color = "green"
             Menu.NotiLabel.background_color = "black"
 
+            if Menu.PlayButton.isClicked():
+                return Scenes.GAME
+
+            if Menu.ShopButton.isClicked():
+                return Scenes.SHOP
+
+            if Menu.InventoryButton.isClicked():
+                return Scenes.INVENTORY
         else:
             Menu.NotiLabel.text = "USER IS NOT FOUND"
             Menu.NotiLabel.color = "red"

@@ -1,7 +1,7 @@
-import pygame
+from src import db
 from configparser import ConfigParser
 
-pygame.font.init()
+
 config = ConfigParser()
 config.read('setting.ini')
 
@@ -38,8 +38,7 @@ FPS = config.getint(
 WINDOW_WIDTH = MAP_WIDTH_TILE * MAP_TILE_SIZE
 WINDOW_HEIGHT = MAP_HEIGHT_TILE * MAP_TILE_SIZE
 
-DEFAULT_SIZE = 32
-
 # OTHER SETING
-FONT = pygame.font.Font("src/fonts/Baloo2.ttf", 32)
+DEFAULT_SIZE = 32
 button_color = (42, 186, 103)
+

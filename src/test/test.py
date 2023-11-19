@@ -1,30 +1,23 @@
-import pygame as pg
-from controls import Button, PictureBox, Label
-from src import db
-pg.init()
+import pygame
+pygame.init()
+screen = pygame.display.set_mode((128, 128))
+clock = pygame.time.Clock()
 
-screen = pg.display.set_mode((500,500))
-clock = pg.time.Clock()
+counter, text = 10, '10'.rjust(3)
+pygame.time.set_timer(pygame.USEREVENT, 1000)
+font = pygame.font.SysFont('Consolas', 30)
 
+run = True
+while run:
+    for e in pygame.event.get():
+        if e.type == pygame.USEREVENT:
+            if counter > 0:
+                counter -= 1
+            text = str(counter).rjust(3) if counter > 0 else 'boom!'
+        if e.type == pygame.QUIT:
+            run = False
 
-#Cau Hinh Control
-testButton = Button(100,100,200,100, border_radius=25)
-# testTxtBox = TextBox(100,250,300,100)
-testPB = PictureBox(100, 200, 100, 100, "src/assets/png/Default size/towerDefense_tile250.png")
-testlabel = Label(200,200, 200, 50, "Hello")
-
-running =True
-while running:
+    screen.fill((255, 255, 255))
+    screen.blit(font.render(text, True, (0, 0, 0)), (32, 48))
+    pygame.display.flip()
     clock.tick(60)
-    screen.fill('green')
-    #testButton.draw(screen)
-    # testTxtBox.draw(screen)
-    #testPB.draw(screen)
-    testlabel.draw(screen)
-    #if testButton.isClicked():
-     #   print("clicked")
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            db.close()
-            quit()
-    pg.display.flip()

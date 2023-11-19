@@ -9,6 +9,7 @@ class Scenes:
     GAME = 2
     SHOP = 3
     INVENTORY = 4
+    PLAY = 5
 
 
 class Scene:

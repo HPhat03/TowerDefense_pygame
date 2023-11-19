@@ -52,7 +52,7 @@ class Control(pygame.sprite.Sprite):
 
 class Button(Control):
     def __init__(self, left, top, width, height, text: str = "new button",
-                 border_radius: int = 5, bgcolor: str = "white",
+                 border_radius: int = 5, bgcolor: ColorValue = "white",
                  color: ColorValue = "black"):
         super().__init__(left, top, width, height, text, bgcolor, color)
         self.radius = border_radius
@@ -101,7 +101,7 @@ class TextBox(Control):
                     if e.key == pg.K_BACKSPACE:
                         self.text = self.text[:-1]
                     elif self.text_rect.width < self.rect.width - \
-                            setting.FONT.__sizeof__() and \
+                            setting.DEFAULT_SIZE and \
                             e.key not in {pg.K_TAB, pg.K_RETURN}:
                         self.text += e.unicode
                     if e.key == pg.K_RETURN:
@@ -126,15 +126,19 @@ class PictureBox(Control):
         self.img_path = img_path
 
     def draw(self, surface):
-        self.image = pg.image.load(self.img_path).convert_alpha()
-        self.image = pg.transform.scale(self.image,
-                                        (self.rect.width, self.rect.height))
-        surface.blit(self.image, (self.rect.left, self.rect.top))
+        if self.img_path != "":
+            self.image = pg.image.load(self.img_path).convert_alpha()
+            self.image = pg.transform.scale(self.image,
+                                            (self.rect.width,
+                                             self.rect.height))
+            surface.blit(self.image, (self.rect.left, self.rect.top))
+        else:
+            pg.draw.rect(surface, "black", self.rect)
 
 
 class Label(Control):
     def __init__(self, left, top, width, height, text: str = "new label",
-                 bgcolor=-1, color: ColorValue = "black",
+                 bgcolor: ColorValue = -1, color: ColorValue = "black",
                  border_radius: int = 10, size=setting.DEFAULT_SIZE):
         super().__init__(left, top, width, height, text, bgcolor, color)
         self.radius = border_radius
@@ -209,7 +213,7 @@ class ItemBox(Control):
 
 class ControlsContainer(Control):
     def __init__(self, left, top, controls, padding,
-                 bgcolor: ColorValue = "grey"):
+                 bgcolor: ColorValue = "black"):
         super().__init__(left, top, 100, 100, background_color=bgcolor)
         width = height = 2 * padding
         maxl = maxt = 0
