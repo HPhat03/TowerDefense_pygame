@@ -7,6 +7,7 @@ from src.setting import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class Inventory(Scene):
+
     background = pygame.image.load("src/assets/InventoryBG.png")
 
     btnBack = PictureBox(20, 20, 100, 50, "src/assets/Logo.png")
@@ -16,16 +17,22 @@ class Inventory(Scene):
                     WINDOW_WIDTH - 40, WINDOW_HEIGHT -
                     (surf.rect.bottom + 40),
                     (0, 0, 0, 128))
-
-    towers = Tower.get_all()
+    boxGr = []
+    for i in range(2):
+        for j in range(6):
+            itembox = ItemBox( (j+1)*2*17 + 120 * j, 230 + 200 *i, 120,
+                      image_path="src/assets/MediumLevelBG.png",
+                      text="")
+            boxGr.append(itembox)
+    #towers = Tower.get_all()
     controls = pygame.sprite.Group()
-    team_towers = pygame.sprite.Group()
+    team_towers = []
 
     for i in range(5):
         box = PictureBox(surf.rect.left + 10 + 110 * i,
                          surf.rect.top + 10, 100, 100,
                          "src/assets/towers/white.jpg")
-        team_towers.add(box)
+        team_towers.append(box)
 
     controls.add(surf, surf2, btnBack)
 
@@ -46,25 +53,44 @@ class Inventory(Scene):
         # drawing session
         for c in Inventory.controls:
             c.draw(screen)
+        inventory = login.inventory
+
+        for i in range(len(inventory)):
+            Inventory.boxGr[i].pictureBox.img_path = inventory[i].img_src
+            Inventory.boxGr[i].mainText.text = inventory[i].name
+            Inventory.boxGr[i].subText.text = f"${inventory[i].in_shop_price}"
+            Inventory.boxGr[i].item = inventory[i]
+
+        team = login.team
+        for b in Inventory.boxGr:
+            b.draw(screen)
+            
+            if b.isClicked():
+                isFreeTeam = True
+
+                if b.item is None:
+                    continue
+
+                for t in team:
+                    if t.id == b.item.id or len(team) == 5:
+                        isFreeTeam = False
+                if isFreeTeam:
+                    item = Tower(b.item.id)
+                    team.append(item)
+
+        for t in range(len(team)):
+            if Inventory.team_towers[t].isClicked():
+                team.remove(team[t])
+
+        for i, t in enumerate(Inventory.team_towers):
+            t.img_path = team[i].img_src if i < len(team) else \
+                "src/assets/towers/white.jpg"
 
         for c in Inventory.team_towers:
             c.draw(screen)
-            if c.isClicked():
-                c.img_path = "src/assets/towers/white.jpg"
-
-        # get data
-        for i, t in enumerate(login.inventory):
-            tower = ItemBox(Inventory.surf2.rect.left + 10 + i * 160,
-                            Inventory.surf2.rect.top + 10, 150,
-                            t.img_src, t.name, f"{t.in_game_price} $")
-            tower.draw(screen)
-            if tower.isClicked():
-                for c in Inventory.team_towers:
-                    if c.img_path.endswith("white.jpg"):
-                        c.img_path = tower.img
-                        break
 
         if Inventory.btnBack.isClicked():
+            print(login)
             return Scenes.MENU
 
         return None

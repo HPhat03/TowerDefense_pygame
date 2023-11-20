@@ -170,7 +170,7 @@ class ItemBox(Control):
                  text: str = "Item Box", subtext: str = "",
                  bgcolor: ColorValue = "black",
                  color: ColorValue = "white", subcolor: ColorValue = "yellow",
-                 padding: int = 5, boder_radius: int = 0):
+                 padding: int = 5, boder_radius: int = 0, item = None):
         super().__init__(left, top, width, width, text, bgcolor, color)
         self.img = image_path
         self.subtext = subtext
@@ -190,7 +190,9 @@ class ItemBox(Control):
                                 self.subText.rect.height + padding)
         self.radius = boder_radius
         self.controls = pg.sprite.Group()
+        self.item = item
         self.controls.add(self.pictureBox, self.mainText, self.subText)
+        self.clicked = True
 
     def update_box(self):
         left = self.rect.left
@@ -210,6 +212,9 @@ class ItemBox(Control):
                      border_radius=self.radius)
         for c in self.controls:
             c.draw(surface)
+
+
+
 
 
 class ControlsContainer(Control):

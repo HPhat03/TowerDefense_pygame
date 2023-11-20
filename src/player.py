@@ -14,6 +14,8 @@ class Player:
         self.team = []
 
     def authenticate(self, name):
+        if name == "": return
+
         players = db.select("select * from Player where name = ?", (name, ))
 
         if len(players) != 1 or players[0][4] != 1:
@@ -44,9 +46,10 @@ class Player:
                 tower = Tower(i[0])
                 self.inventory.append(tower)
 
-    def hadTower(self, tower):
-        if self.isAuth:
-            for t in self.inventory:
-                if t.id == tower.id:
-                    return True
-            return False
+    def update(self, team = False, Inventory = False, Coins = False):
+        if Coins:
+            db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?;",
+                (self.coins, self.name, ))
+
+    def __str__(self):
+        return f"name: {self.name}\ncoins: {self.coins}"
