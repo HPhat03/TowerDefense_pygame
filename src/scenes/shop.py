@@ -16,13 +16,14 @@ class Shop(Scene):
 
     surf = Surface(20, 80, WINDOW_WIDTH - 40, WINDOW_HEIGHT - 110,
                    (0, 0, 0, 128))
+    lb_coin = Label(WINDOW_WIDTH-20-100,20,100,40, "", color="yellow")
     shop = []
     itemids = db.select("select id from Tower")
     for i in itemids:
         tower = Tower(i[0])
         shop.append(tower)
 
-    controls.add(surf, btnBack, title)
+    controls.add(surf, btnBack, title, lb_coin)
     boxGr = pygame.sprite.Group()
 
     i = 0
@@ -39,7 +40,7 @@ class Shop(Scene):
         Shop.background = pygame.transform.scale(
             Shop.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         screen.blit(Shop.background, (0, 0))
-
+        Shop.lb_coin.text = f"Coins: {login.coins}"
         towers = Shop.shop
         i = Shop.i
         while(i < len(towers)):

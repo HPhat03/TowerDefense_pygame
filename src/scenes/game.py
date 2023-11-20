@@ -79,7 +79,7 @@ class Game(Scene):
         # clicked events
         for s in Game.teamTowers:
             if s.isClicked():
-                return Scenes.MENU
+                return Scenes.INVENTORY
         if Game.nextBt.isClicked():
             if Game.map_index < len(Maps)-1:
                 Game.map_index += 1
