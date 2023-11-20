@@ -50,3 +50,6 @@ class Player:
                 if t.id == tower.id:
                     return True
             return False
+    def update(self, team = False, Inventory = False, Coins = False):
+        if Coins:
+            db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?;",(self.coins,self.name, ))

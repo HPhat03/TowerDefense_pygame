@@ -70,6 +70,7 @@ class Game(Scene):
         Game.MapNameLb.text = cur_map.name
 
         # Drawing session
+
         screen.blit(Game.Background, (0, 0))
         pg.draw.rect(screen, color=Game.panel_color, rect=Game.panel,
                      border_radius=15)

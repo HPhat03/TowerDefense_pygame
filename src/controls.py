@@ -40,14 +40,13 @@ class Control(pygame.sprite.Sprite):
         surface.blit(self.text_display, self.text_rect)
 
     def isClicked(self):
-        if not self.rect.collidepoint(pg.mouse.get_pos()):
-            return False
-
-        if pg.mouse.get_pressed()[0] == 0:
-            self.clicked = False
-        elif pg.mouse.get_pressed()[0] == 1 and self.clicked is False:
-            self.clicked = True
-            return True
+        if self.rect.collidepoint(pg.mouse.get_pos()):
+            if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+                return True
+            if pg.mouse.get_pressed()[0] == 0:
+                self.clicked = False
+        return False
 
 
 class Button(Control):
@@ -169,7 +168,7 @@ class ItemBox(Control):
                  text: str = "Item Box", subtext: str = "",
                  bgcolor: ColorValue = "black",
                  color: ColorValue = "white", subcolor: ColorValue = "yellow",
-                 padding: int = 5, boder_radius: int = 0):
+                 padding: int = 5, boder_radius: int = 0, item = None):
         super().__init__(left, top, width, width, text, bgcolor, color)
         self.img = image_path
         self.subtext = subtext
@@ -189,7 +188,9 @@ class ItemBox(Control):
                                 self.subText.rect.height + padding)
         self.radius = boder_radius
         self.controls = pg.sprite.Group()
+        self.item = item
         self.controls.add(self.pictureBox, self.mainText, self.subText)
+        self.clicked = True
 
     def update_box(self):
         left = self.rect.left
@@ -209,6 +210,9 @@ class ItemBox(Control):
                      border_radius=self.radius)
         for c in self.controls:
             c.draw(surface)
+
+
+
 
 
 class ControlsContainer(Control):

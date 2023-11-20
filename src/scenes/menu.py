@@ -66,6 +66,7 @@ class Menu(Scene):
                 return Scenes.GAME
 
             if Menu.ShopButton.isClicked():
+                print("clicked")
                 return Scenes.SHOP
 
             if Menu.InventoryButton.isClicked():
