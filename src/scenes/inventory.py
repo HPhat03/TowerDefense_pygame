@@ -72,11 +72,13 @@ class Inventory(Scene):
         for b in Inventory.boxGr:
             if b.isClicked():
                 isFreeTeam = True
-                for t in team:
-                    if t.id == b.item.id or len(team)==5:
-                        isFreeTeam = False
-                if isFreeTeam:
-                    item = Tower(b.item.id)
+                if b.item != None:
+                    for t in team:
+
+                            if t.id == b.item.id or len(team)==5:
+                                isFreeTeam = False
+                    if isFreeTeam:
+                        item = Tower(b.item.id)
                     team.append(item)
 
         for t in range(len(team)):
