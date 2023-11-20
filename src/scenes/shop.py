@@ -1,11 +1,11 @@
 import pygame
-from src.Tower import Tower
 
-from src.controls import ItemBox, Label, PictureBox, Surface
 from .core import Scene, Scenes
+from src.controls import ItemBox, Label, PictureBox, Surface
 from src.setting import WINDOW_WIDTH, WINDOW_HEIGHT
 from src import db
 from src.Tower import Tower
+
 
 class Shop(Scene):
     background = pygame.image.load("src/assets/shop_bg.jpg")
@@ -42,13 +42,14 @@ class Shop(Scene):
         screen.blit(Shop.background, (0, 0))
 
         Shop.lb_coin.text = f"Coins: {login.coins}"
-        towers = [i for i in Shop.shop if i.in_shop_price > 0 and i not in \
-            login.inventory]
+        towers = [i for i in Shop.shop if i.in_shop_price > 0 and i not in
+                  login.inventory]
 
         for i in range(len(towers)):
             box = ItemBox(40 + 160 * i, 100, 150,
                           image_path=towers[i].img_src,
-                          text=towers[i].name, subtext=f"{towers[i].in_shop_price} $")
+                          text=towers[i].name,
+                          subtext=f"{towers[i].in_shop_price} $")
             Shop.boxGr.add(box)
 
         for c in Shop.controls:

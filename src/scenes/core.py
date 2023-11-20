@@ -15,7 +15,7 @@ class Scenes:
 class Scene:
     @staticmethod
     @abstractmethod
-    def event_handler(event, login):
+    def event_handler(event):
         pass
 
     @staticmethod
@@ -37,7 +37,7 @@ class Scene:
                         db.close()
                         quit()
                     else:
-                        if (t := cls.event_handler(event, login)) is not None:
+                        if (t := cls.event_handler(event)) is not None:
                             return t
 
             if (t := cls.game(screen, login)) is not None:

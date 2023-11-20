@@ -36,7 +36,7 @@ class Menu(Scene):
                  QuitButton, NameTextbox, NotiLabel)
 
     @staticmethod
-    def event_handler(event, login):
+    def event_handler(event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_s:
                 return Scenes.GAME

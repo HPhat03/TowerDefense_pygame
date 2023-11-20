@@ -48,6 +48,7 @@ class Control(pygame.sprite.Sprite):
         elif pg.mouse.get_pressed()[0] == 1 and self.clicked is False:
             self.clicked = True
             return True
+        return False
 
 
 class Button(Control):
@@ -159,9 +160,9 @@ class Surface(Control):
 
     def draw(self, surface):
         surface.blit(self.surf, (self.rect.left, self.rect.top))
-        *rgb, a = self.background_color
-        self.surf.fill(cast(tuple[int, int, int], rgb))
-        self.surf.set_alpha(cast(int, a))
+        *rgb, a = cast(RGBAOutput, self.background_color)
+        self.surf.fill(rgb)
+        self.surf.set_alpha(a)
 
 
 class ItemBox(Control):
