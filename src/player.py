@@ -1,6 +1,6 @@
 from src import db
 import pygame as pg
-
+from src.Tower import Tower
 class Player:
     def __init__(self):
         self.name = None
@@ -27,4 +27,22 @@ class Player:
             self.password = player[2]
             self.coins = player[3]
             self.active = True
-            self.team = db.select(("SELECT Tower.* FROM ((Player INNER JOIN Player_Towers ON Player.id = Player_Towers.idPlayer) INNER JOIN Tower ON Player_Towers.idTower = Tower.id) WHERE Player.name = ?"), (self.name, ))
+            idTeams = db.select(("SELECT idTower1, idTower2, idTower3, idTower4, idTower5 FROM Player INNER JOIN Player_Team on Player_Team.idPlayer = Player.id WHERE Player.name = ?"), (self.name, ))[0]
+
+            self.team = []
+            for i in range(5):
+                if idTeams[i] != None:
+                   tower = Tower(idTeams[i])
+                   self.team.append(tower)
+
+            self.inventory = []
+            idInventory = db.select(("SELECT idTower FROM Player INNER JOIN Player_Towers ON Player.id = Player_Towers.idPlayer WHERE Player.name = ?"),(self.name,))
+            for i in idInventory:
+                tower = Tower(i[0])
+                self.inventory.append(tower)
+    def hadTower(self, tower):
+        if self.isAuth:
+            for t in self.inventory:
+                if t.id == tower.id:
+                    return True
+            return False

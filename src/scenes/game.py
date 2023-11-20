@@ -60,9 +60,9 @@ class Game(Scene):
     def game(screen, login):
         # Get list of tower set in player's team
         for t in range(0, len(login.team)):
-            Game.teamTowers[t].pictureBox.img_path = login.team[t][2]
-            Game.teamTowers[t].mainText.text = login.team[t][1]
-            Game.teamTowers[t].subText.text = f"${login.team[t][4]}"
+            Game.teamTowers[t].pictureBox.img_path = login.team[t].img_src
+            Game.teamTowers[t].mainText.text = login.team[t].name
+            Game.teamTowers[t].subText.text = f"${login.team[t].in_game_price}"
 
         # Get map loaded on map_loader
         cur_map = Maps[Game.map_index]

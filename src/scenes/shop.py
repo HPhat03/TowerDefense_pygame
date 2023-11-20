@@ -3,7 +3,8 @@ import pygame
 from src.controls import ItemBox, Label, PictureBox, Surface
 from .core import Scene, Scenes
 from src.setting import WINDOW_WIDTH, WINDOW_HEIGHT
-
+from src import db
+from src.Tower import Tower
 
 class Shop(Scene):
     background = pygame.image.load("src/assets/shop_bg.jpg")
@@ -15,25 +16,16 @@ class Shop(Scene):
 
     surf = Surface(20, 80, WINDOW_WIDTH - 40, WINDOW_HEIGHT - 110,
                    (0, 0, 0, 128))
-
-    towers = [
-        {
-            "name": "scout",
-            "price": 200
-        },
-        {
-            "name": "sniper",
-            "price": 250
-        }
-    ]
+    shop = []
+    itemids = db.select("select id from Tower")
+    for i in itemids:
+        tower = Tower(i[0])
+        shop.append(tower)
 
     controls.add(surf, btnBack, title)
+    boxGr = pygame.sprite.Group()
 
-    for i, t in enumerate(towers):
-        box = ItemBox(40 + 160*i, 100, 150,
-                      "src/assets/towers/towerDefense_tile250.png",
-                      t["name"], f"{t['price']} $")
-        controls.add(box)
+    i = 0
 
     @staticmethod
     def event_handler(event, login):
@@ -48,11 +40,31 @@ class Shop(Scene):
             Shop.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         screen.blit(Shop.background, (0, 0))
 
+        towers = Shop.shop
+        i = Shop.i
+        while(i < len(towers)):
+            if towers[i].in_shop_price == 0 or login.hadTower(towers[i]):
+                towers.remove(towers[i])
+                i-=1
+            i+=1
+        i = 0
+
+        for i in range(len(towers)):
+            box = ItemBox(40 + 160 * i, 100, 150,
+                          image_path=towers[i].img_src,
+                          text=towers[i].name, subtext=f"{towers[i].in_shop_price} $")
+            Shop.boxGr.add(box)
+
         for c in Shop.controls:
             c.draw(screen)
-            c.displayEffect()
+        for b in Shop.boxGr:
+            b.draw(screen)
 
         if Shop.btnBack.isClicked():
             return Scenes.MENU
+
+
+
+
 
         return None

@@ -26,6 +26,7 @@ class Database:
         return self.__cursor.rowcount > 0
 
     def close(self) -> None:
+
         self.__cursor.close()
         self.__connect.close()
 

@@ -148,7 +148,7 @@ class Label(Control):
         if self.background_color != -1:
             pg.draw.rect(surface, self.background_color, self.rect,
                          border_radius=self.radius)
-        self.draw_text(surface)
+        self.draw_text(surface, self.font_size)
 
 
 class Surface(Control):
