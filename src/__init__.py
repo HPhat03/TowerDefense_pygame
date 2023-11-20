@@ -20,14 +20,13 @@ def main():
     from .Tower import Tower
     scene = Scenes.MENU
 
-    a = Tower(1)
     pygame.display.set_caption("Tower Defense 2D")
     icon = pygame.image.load('src/assets/icon.jpg')
     pygame.display.set_icon(icon)
     login = Player()
     while True:
         clock.tick(FPS)
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (30,30)
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (30, 30)
         match scene:
             case Scenes.MENU:
                 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -44,4 +43,4 @@ def main():
             case Scenes.PLAY:
                 screen = pygame.display.set_mode((WINDOW_WIDTH + 300,
                                                   WINDOW_HEIGHT + 180))
-                scene = Play.run(screen,login)
+                scene = Play.run(screen, login)

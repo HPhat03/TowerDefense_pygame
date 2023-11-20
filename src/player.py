@@ -1,6 +1,9 @@
-from src import db
 import pygame as pg
+
+from src import db
 from src.Tower import Tower
+
+
 class Player:
     def __init__(self):
         self.name = None
@@ -13,8 +16,8 @@ class Player:
     def authenticate(self, name):
         players = db.select("select * from Player where name = ?", (name, ))
 
-        if len(players) != 1 or players[0][4]!=1:
-            self.isAuth=False
+        if len(players) != 1 or players[0][4] != 1:
+            self.isAuth = False
             self.name = None
             self.password = None
             self.coins = 0
@@ -40,6 +43,7 @@ class Player:
             for i in idInventory:
                 tower = Tower(i[0])
                 self.inventory.append(tower)
+
     def hadTower(self, tower):
         if self.isAuth:
             for t in self.inventory:
