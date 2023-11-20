@@ -55,11 +55,17 @@ class Inventory(Scene):
             c.draw(screen)
         inventory = login.inventory
 
-        for i in range(len(inventory)):
-            Inventory.boxGr[i].pictureBox.img_path = inventory[i].img_src
-            Inventory.boxGr[i].mainText.text = inventory[i].name
-            Inventory.boxGr[i].subText.text = f"${inventory[i].in_shop_price}"
-            Inventory.boxGr[i].item = inventory[i]
+        for i in range(12):
+            if i < len(inventory):
+                Inventory.boxGr[i].pictureBox.img_path = inventory[i].img_src
+                Inventory.boxGr[i].mainText.text = inventory[i].name
+                Inventory.boxGr[i].subText.text = f"${inventory[i].in_game_price}"
+                Inventory.boxGr[i].item = inventory[i]
+            else:
+                Inventory.boxGr[i].pictureBox.img_path = "src/assets/MediumLevelBG.png"
+                Inventory.boxGr[i].mainText.text = ""
+                Inventory.boxGr[i].subText.text = ""
+                Inventory.boxGr[i].item = None
 
         team = login.team
         for b in Inventory.boxGr:

@@ -28,14 +28,14 @@ class Game(Scene):
         box = ItemBox((c+1)*2*padding + c*100, 2 * padding,
                       100, "src/assets/MediumLevelBG.png", "NONE", "")
         teamTowers.append(box)
-    container = ControlsContainer(350, 20, teamTowers, padding, "grey")
+    container = ControlsContainer(350, 100, teamTowers, padding, "grey")
 
-    Map_Loader = PictureBox(350, 200, container.rect.width, 300, "")
-    nextBt = Button(Map_Loader.rect.left + Map_Loader.rect.width/2 + 200,
+    Map_Loader = PictureBox(350, container.rect.top + 200, container.rect.width, 300, "")
+    nextBt = Button(Map_Loader.rect.left + Map_Loader.rect.width/2 + 175,
                     Map_Loader.rect.top + Map_Loader.rect.height + 10,
                     50, 50, ">", 25, button_color, "white")
 
-    preBt = Button(Map_Loader.rect.left + Map_Loader.rect.width/2 - 200,
+    preBt = Button(Map_Loader.rect.left + Map_Loader.rect.width/2 - 225,
                    Map_Loader.rect.top + Map_Loader.rect.height + 10,
                    50, 50, "<", 25, button_color, "white")
     MapNameLb = Label(preBt.rect.right, nextBt.rect.top,
@@ -44,7 +44,7 @@ class Game(Scene):
     controls = pg.sprite.Group()
     map_index = 0
 
-    panel = pg.Rect(325, 10, container.rect.width + 50, nextBt.rect.bottom)
+    panel = pg.Rect(container.rect.left -25, container.rect.top - 10, container.rect.width + 50, nextBt.rect.bottom - 80)
     panel_color = EzBt.background_color
     controls.add(Backpic, LvLabel, EzBt, MdBt, PlayBt, container,
                  Map_Loader, nextBt, preBt, MapNameLb)
@@ -61,11 +61,15 @@ class Game(Scene):
         Game.background = pg.transform.scale(
             Game.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         # Get list of tower set in player's team
-        for t in range(0, len(login.team)):
-            Game.teamTowers[t].pictureBox.img_path = login.team[t].img_src
-            Game.teamTowers[t].mainText.text = login.team[t].name
-            Game.teamTowers[t].subText.text = f"${login.team[t].in_game_price}"
-
+        for t in range(5):
+            if t < len(login.team):
+                Game.teamTowers[t].pictureBox.img_path = login.team[t].img_src
+                Game.teamTowers[t].mainText.text = login.team[t].name
+                Game.teamTowers[t].subText.text = f"${login.team[t].in_game_price}"
+            else:
+                Game.teamTowers[t].pictureBox.img_path = "src/assets/MediumLevelBG.png"
+                Game.teamTowers[t].mainText.text = "NONE"
+                Game.teamTowers[t].subText.text = ""
         # Get map loaded on map_loader
         cur_map = Maps[Game.map_index]
         Game.Map_Loader.img_path = cur_map.img_path
