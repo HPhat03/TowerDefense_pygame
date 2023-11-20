@@ -36,7 +36,7 @@ class Menu(Scene):
                  QuitButton, NameTextbox, NotiLabel)
 
     @staticmethod
-    def event_handler(event, login):
+    def event_handler(event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_s:
                 return Scenes.GAME
@@ -51,13 +51,18 @@ class Menu(Scene):
             c.draw(screen)
             c.displayEffect()
 
-        login.authenticate(Menu.NameTextbox.text)
-
         if Menu.QuitButton.isClicked():
             db.close()
             quit()
 
-        if login.isAuth:
+        if login.isAuth is False:
+            login.authenticate(Menu.NameTextbox.text)
+
+            Menu.NotiLabel.text = "USER IS NOT FOUND"
+            Menu.NotiLabel.color = "red"
+            Menu.NotiLabel.background_color = -1
+
+        else:
             Menu.NotiLabel.text = f"Welcome {login.name}"
             Menu.NotiLabel.color = "green"
             Menu.NotiLabel.background_color = "black"
@@ -66,13 +71,8 @@ class Menu(Scene):
                 return Scenes.GAME
 
             if Menu.ShopButton.isClicked():
-                print("clicked")
                 return Scenes.SHOP
 
             if Menu.InventoryButton.isClicked():
                 return Scenes.INVENTORY
-        else:
-            Menu.NotiLabel.text = "USER IS NOT FOUND"
-            Menu.NotiLabel.color = "red"
-            Menu.NotiLabel.background_color = -1
         return None

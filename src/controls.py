@@ -40,12 +40,14 @@ class Control(pygame.sprite.Sprite):
         surface.blit(self.text_display, self.text_rect)
 
     def isClicked(self):
-        if self.rect.collidepoint(pg.mouse.get_pos()):
-            if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
-                return True
-            if pg.mouse.get_pressed()[0] == 0:
-                self.clicked = False
+        if not self.rect.collidepoint(pg.mouse.get_pos()):
+            return False
+
+        if pg.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+        elif pg.mouse.get_pressed()[0] == 1 and self.clicked is False:
+            self.clicked = True
+            return True
         return False
 
 
@@ -158,9 +160,9 @@ class Surface(Control):
 
     def draw(self, surface):
         surface.blit(self.surf, (self.rect.left, self.rect.top))
-        *rgb, a = self.background_color
-        self.surf.fill(cast(tuple[int, int, int], rgb))
-        self.surf.set_alpha(cast(int, a))
+        *rgb, a = cast(RGBAOutput, self.background_color)
+        self.surf.fill(rgb)
+        self.surf.set_alpha(a)
 
 
 class ItemBox(Control):

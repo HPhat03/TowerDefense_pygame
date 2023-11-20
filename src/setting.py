@@ -1,4 +1,3 @@
-from src import db
 from configparser import ConfigParser
 
 
@@ -35,10 +34,9 @@ FPS = config.getint(
     option="FPS",
     fallback=DEFAULT["FPS"]
 )
-WINDOW_WIDTH = MAP_WIDTH_TILE * MAP_TILE_SIZE
-WINDOW_HEIGHT = MAP_HEIGHT_TILE * MAP_TILE_SIZE
+WINDOW_WIDTH = MAP_WIDTH_TILE * MAP_TILE_SIZE + 300
+WINDOW_HEIGHT = MAP_HEIGHT_TILE * MAP_TILE_SIZE + 130
 
 # OTHER SETING
 DEFAULT_SIZE = 32
 button_color = (42, 186, 103)
-
