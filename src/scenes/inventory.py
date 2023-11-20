@@ -19,19 +19,19 @@ class Inventory(Scene):
 
     towers = Tower.get_all()
     controls = pygame.sprite.Group()
-    list_towers = pygame.sprite.Group()
-    inventory = pygame.sprite.Group()
+    team_towers = pygame.sprite.Group()
 
     for i in range(5):
         box = PictureBox(surf.rect.left + 10 + 110 * i,
                          surf.rect.top + 10, 100, 100,
                          "src/assets/towers/white.jpg")
-        inventory.add(box)
+        team_towers.add(box)
 
-    for i, t in enumerate(towers):
-        tower = ItemBox(surf2.rect.left + 10 + i*160, surf2.rect.top + 10, 150,
-                        t["img_src"], t["name"], f"{t['in_game_price']} $")
-        list_towers.add(tower)
+
+    # for i, t in enumerate(towers):
+    #     tower = ItemBox(surf2.rect.left + 10 + i*160, surf2.rect.top + 10, 150,
+    #                     t["img_src"], t["name"], f"{t['in_game_price']} $")
+    #     list_towers.add(tower)
 
     controls.add(surf, surf2, btnBack)
 
@@ -44,26 +44,37 @@ class Inventory(Scene):
 
     @staticmethod
     def game(screen, login):
+        #drawing background
         Inventory.background = pygame.transform.scale(
             Inventory.background, (WINDOW_WIDTH, WINDOW_HEIGHT))
         screen.blit(Inventory.background, (0, 0))
 
+        #drawing session
         for c in Inventory.controls:
             c.draw(screen)
-            c.displayEffect()
 
-        for c in Inventory.inventory:
+        for c in Inventory.team_towers:
             c.draw(screen)
             if c.isClicked():
                 c.img_path = "src/assets/towers/white.jpg"
-
-        for t in Inventory.list_towers:
-            t.draw(screen)
-            if t.isClicked():
-                for c in Inventory.inventory:
+        #get data
+        for i, t in enumerate(login.inventory):
+            tower = ItemBox(Inventory.surf2.rect.left + 10 + i * 160, Inventory.surf2.rect.top + 10, 150,
+                            t.img_src, t.name, f"{t.in_game_price} $")
+            tower.draw(screen)
+            if tower.isClicked():
+                for c in Inventory.team_towers:
                     if c.img_path.endswith("white.jpg"):
-                        c.img_path = t.img
+                        c.img_path = tower.img
                         break
+
+
+
+
+
+        # for t in Inventory.list_towers:
+        #     t.draw(screen)
+
 
         if Inventory.btnBack.isClicked():
             return Scenes.MENU

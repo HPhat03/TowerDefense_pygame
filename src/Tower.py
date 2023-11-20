@@ -1,9 +1,12 @@
+from pygame.sprite import Sprite
+
 from src import db
 
 
-class Tower:
+class Tower(Sprite):
     def __init__(self, id: int | tuple):
-        data = db.select("select * from Tower where id=?", (id, ))
+        Sprite.__init__(self)
+        data = db.select("select * from Tower where id=?", (id, ))[0]
 
         self.id, self.name, self.img_src, \
             self.in_shop_price, self.in_game_price = data
@@ -16,6 +19,13 @@ class Tower:
             "in_shop_price": self.in_shop_price,
             "in_game_price": self.in_game_price
         }
+
+    def __eq__(self, other):
+        if not isinstance(other, Tower):
+            return NotImplemented
+
+        return self.id == other.id
+
 
     @staticmethod
     def get_all():

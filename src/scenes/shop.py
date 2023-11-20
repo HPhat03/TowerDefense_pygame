@@ -4,7 +4,8 @@ from src.Tower import Tower
 from src.controls import ItemBox, Label, PictureBox, Surface
 from .core import Scene, Scenes
 from src.setting import WINDOW_WIDTH, WINDOW_HEIGHT
-
+from src import db
+from src.Tower import Tower
 
 class Shop(Scene):
     background = pygame.image.load("src/assets/shop_bg.jpg")
@@ -18,15 +19,14 @@ class Shop(Scene):
     surf = Surface(20, 80, WINDOW_WIDTH - 40, WINDOW_HEIGHT - 110,
                    (0, 0, 0, 128))
     lb_coin = Label(WINDOW_WIDTH - 20 - 100, 20, 100, 40, "", color="yellow")
-
-    towers = Tower.get_all()
+    shop = []
+    itemids = db.select("select id from Tower")
+    for i in itemids:
+        tower = Tower(i[0])
+        shop.append(tower)
 
     controls.add(surf, btnBack, title, lb_coin)
-
-    for i, t in enumerate(towers):
-        box = ItemBox(40 + 160*i, 100, 150,
-                      t["img_src"], t["name"], f"{t['in_shop_price']} $")
-        list_towers.add(box)
+    boxGr = pygame.sprite.Group()
 
     @staticmethod
     def event_handler(event):
@@ -42,11 +42,19 @@ class Shop(Scene):
         screen.blit(Shop.background, (0, 0))
 
         Shop.lb_coin.text = f"Coins: {login.coins}"
+        towers = [i for i in Shop.shop if i.in_shop_price > 0 and i not in \
+            login.inventory]
+
+        for i in range(len(towers)):
+            box = ItemBox(40 + 160 * i, 100, 150,
+                          image_path=towers[i].img_src,
+                          text=towers[i].name, subtext=f"{towers[i].in_shop_price} $")
+            Shop.boxGr.add(box)
 
         for c in Shop.controls:
             c.draw(screen)
-            c.displayEffect()
-
+        for b in Shop.boxGr:
+            b.draw(screen)
         for t in Shop.list_towers:
             t.draw(screen)
 

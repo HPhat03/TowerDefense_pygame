@@ -17,14 +17,13 @@ def main():
     from .setting import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
     from .player import Player
     from .scenes import Scenes, Game, Menu, Shop, Inventory, Play
-
+    from .Tower import Tower
     scene = Scenes.MENU
 
     pygame.display.set_caption("Tower Defense 2D")
     icon = pygame.image.load('src/assets/icon.jpg')
     pygame.display.set_icon(icon)
     login = Player()
-
     while True:
         clock.tick(FPS)
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (30, 30)
