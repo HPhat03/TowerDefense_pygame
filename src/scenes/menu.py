@@ -53,12 +53,6 @@ class Menu(Scene):
 
         login.authenticate(Menu.NameTextbox.text)
 
-        if Menu.InventoryButton.isClicked():
-            return Scenes.INVENTORY
-
-        if Menu.ShopButton.isClicked():
-            return Scenes.SHOP
-
         if Menu.QuitButton.isClicked():
             db.close()
             quit()

@@ -1,4 +1,5 @@
 import pygame
+from src.Tower import Tower
 
 from src.controls import ItemBox, PictureBox, Surface
 from .core import Scene, Scenes
@@ -6,28 +7,17 @@ from src.setting import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class Inventory(Scene):
-    background = pygame.image.load("src/assets/shop_bg.jpg")
+    background = pygame.image.load("src/assets/InventoryBG.png")
 
     btnBack = PictureBox(20, 20, 100, 50, "src/assets/Logo.png")
-    surf = Surface(WINDOW_WIDTH / 2 - 280, 30, 560, 120,
+    surf = Surface(WINDOW_WIDTH / 2 - 280, 70, 560, 120,
                    (0, 0, 0, 128))
     surf2 = Surface(20, surf.rect.bottom + 20,
                     WINDOW_WIDTH - 40, WINDOW_HEIGHT -
                     (surf.rect.bottom + 40),
                     (0, 0, 0, 128))
 
-    towers = [
-        {
-            "name": "scout",
-            "price": 200,
-            "img_path": "src/assets/towers/towerDefense_tile250.png"
-        },
-        {
-            "name": "sniper",
-            "price": 250,
-            "img_path": "src/assets/towers/towerDefense_tile250.png"
-        }
-    ]
+    towers = Tower.get_all()
     controls = pygame.sprite.Group()
     list_towers = pygame.sprite.Group()
     inventory = pygame.sprite.Group()
@@ -40,7 +30,7 @@ class Inventory(Scene):
 
     for i, t in enumerate(towers):
         tower = ItemBox(surf2.rect.left + 10 + i*160, surf2.rect.top + 10, 150,
-                        t["img_path"], t["name"], f"{t['price']} $")
+                        t["img_src"], t["name"], f"{t['in_game_price']} $")
         list_towers.add(tower)
 
     controls.add(surf, surf2, btnBack)
