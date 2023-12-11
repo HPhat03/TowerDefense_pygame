@@ -96,7 +96,7 @@ class Inventory(Scene):
             c.draw(screen)
 
         if Inventory.btnBack.isClicked():
-            print(login)
+            # print(login)
             return Scenes.MENU
 
         return None

@@ -28,6 +28,7 @@ class Player:
         else:
             player = players[0]
             self.isAuth = True
+            self.id = player[0]
             self.name = player[1]
             self.password = player[2]
             self.coins = player[3]
@@ -41,15 +42,29 @@ class Player:
                    self.team.append(tower)
 
             self.inventory = []
-            idInventory = db.select(("SELECT idTower FROM Player INNER JOIN Player_Towers ON Player.id = Player_Towers.idPlayer WHERE Player.name = ?"),(self.name,))
-            for i in idInventory:
+            self.idInventory = db.select(("SELECT idTower FROM Player INNER JOIN Player_Towers ON Player.id = Player_Towers.idPlayer WHERE Player.name = ?"),(self.name,))
+            for i in self.idInventory:
                 tower = Tower(i[0])
                 self.inventory.append(tower)
 
-    def update(self, team = False, Inventory = False, Coins = False):
-        if Coins:
-            db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?;",
-                (self.coins, self.name, ))
+    def update(self, team = False, inventory = False, coins = False):
+        if coins:
+            db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?;", (self.coins, self.name, ))
+        if team:
+            for i in range(len(self.team)):
+                db.execute(f"UPDATE Player_Team SET idTower{i+1} = ? WHERE idPlayer = ?", (self.team[i].id, self.id,))
+        if inventory:
+            insertable = False
+            for i in range(len(self.inventory)):
+                for j in self.idInventory:
+                    if j[0] == self.inventory[i].id:
+                        insertable = False
+                        break
+                    else:
+                        insertable = True
+                        print (j[0], self.inventory[i].id)
+                if insertable:
+                    db.execute("INSERT INTO Player_Towers(idPlayer, idTower) VALUES (?,?);", (self.id,self.inventory[i].id, ))
 
     def __str__(self):
         return f"name: {self.name}\ncoins: {self.coins}"

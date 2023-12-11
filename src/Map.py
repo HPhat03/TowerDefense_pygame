@@ -9,6 +9,8 @@ class Map(pg.sprite.Sprite):
         self.img_path = map[2]
         self.image = pg.image.load(self.img_path)
         self.data_path = map[3]
+        self.path = map[4]
+        self.map_data = []
         self.DataGetting()
 
     def DataGetting(self):
@@ -18,6 +20,7 @@ class Map(pg.sprite.Sprite):
         for data in map_data["layers"]:
             if data["name"] == "Main":
                 self.map_data = data["data"]
+                # self.pathBlock = data["path"]
             if data["name"] == "WayPoints":
                 for o in data["objects"]:
                     dx = o.get("x")
@@ -30,5 +33,5 @@ class Map(pg.sprite.Sprite):
 
     def load(self, surface):
         surface.blit(self.image, (0,0))
-        pg.draw.lines(surface,"black",False,self.waypoints,2)
+        # pg.draw.lines(surface,"black",False,self.waypoints,2)
 

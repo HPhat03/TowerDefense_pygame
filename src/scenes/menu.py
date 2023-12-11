@@ -54,8 +54,11 @@ class Menu(Scene):
         if Menu.QuitButton.isClicked():
             db.close()
             quit()
-        if login.name != Menu.NameTextbox.text:
-            login.isAuth = False
+        if login.isAuth:
+            if login.name != Menu.NameTextbox.text:
+                login.update(coins=True, team = True, inventory = True)
+                print("saved")
+                login.isAuth = False
         if login.isAuth is False:
             login.authenticate(Menu.NameTextbox.text)
 

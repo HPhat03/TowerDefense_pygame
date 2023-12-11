@@ -73,13 +73,11 @@ class Shop(Scene):
             if box.item != None:
                 if box.isClicked() and login.coins>= box.item.in_shop_price:
                     login.coins -= box.item.in_shop_price
-                    #login.update(Coins = True)
                     login.inventory.append(box.item)
                     Shop.boxGr[i].item = None
 
 
         if Shop.btnBack.isClicked():
-            print(login)
             return Scenes.MENU
 
         return None
