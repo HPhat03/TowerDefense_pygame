@@ -5,6 +5,7 @@ import json
 class Map(pg.sprite.Sprite):
     def __init__(self, map):
         pg.sprite.Sprite.__init__(self)
+        self.id = map[0]
         self.name = map[1]
         self.img_path = map[2]
         self.image = pg.image.load(self.img_path)

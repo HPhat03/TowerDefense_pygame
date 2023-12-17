@@ -51,8 +51,8 @@ class Player:
                 tower = Tower(i[0])
                 self.inventory.append(tower)
 
-    def update(self, team: bool = False, inventory: bool = False,
-               coins: bool = False):
+    def update(self, team: bool = True, inventory: bool = True,
+               coins: bool = True):
         if coins:
             db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?;", (self.coins, self.name, ))
         if team:

@@ -55,8 +55,8 @@ class Tower:
         for i in record.towerGroup:
             if i.tile_x == x and i.tile_y == y:
                 return False
-        # if len(record.towerGroup) >= 20:
-        #     return False
+        if len(record.towerGroup) >= 20:
+            return False
         return True
 
 

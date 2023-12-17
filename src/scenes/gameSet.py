@@ -8,6 +8,10 @@ from .play import Play
 from src import Maps
 
 
+class GameMode:
+    EASY = 0
+    MEDIUM = 1
+
 class Game(Scene):
 
     EzBg = pg.image.load("src/assets/EasyLevelBG.png")
@@ -15,8 +19,8 @@ class Game(Scene):
     background = EzBg
 
     Backpic = PictureBox(20, 20, 100, 50, "src/assets/Logo.png")
-    EzBt = Button(20, 250, 150, 50, "NORMAL", 10, (112, 187, 68), "white")
-    MdBt = Button(20, 320, 150, 50, "HARD", 10, (183, 51, 62), "white")
+    EzBt = Button(20, 250, 150, 50, "EASY", 10, (112, 187, 68), "white")
+    MdBt = Button(20, 320, 150, 50, "MEDIUM", 10, (183, 51, 62), "white")
     PlayBt = Button(WINDOW_WIDTH - 120, WINDOW_HEIGHT - 60,
                     100, 50, "Play", 20, (112, 187, 68), "white")
     isEnabled = True
@@ -52,7 +56,7 @@ class Game(Scene):
                  Map_Loader, nextBt, preBt, MapNameLb)
 
     # other
-    mode = "easy"
+    mode = GameMode.EASY
 
     @staticmethod
     def event_handler(event):
@@ -103,10 +107,11 @@ class Game(Scene):
             Game.background = Game.EzBg
             Game.panel_color = Game.EzBt.background_color
             Game.isEnabled = True
-            Game.mode = "easy"
+            Game.mode = GameMode.EASY
         if Game.MdBt.isClicked():
             Game.background = Game.MdBg
             Game.panel_color = Game.MdBt.background_color
+            Game.mode = GameMode.MEDIUM
             Game.isEnabled = False
         if not Game.isEnabled:
             Game.PlayBt.background_color = "grey"

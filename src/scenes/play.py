@@ -26,7 +26,7 @@ class Play(Scene):
                               100, "src/assets/MediumLevelBG.png", "NONE", "")
                 teamTowers.append(box)
                 count += 1
-    # teamTowers.append(sellingBT)
+
     container = ControlsContainer(setting.WINDOW_WIDTH - setting.RIGHT_BAR, 0,
                                   teamTowers, padding=padding,
                                   bgcolor=(113, 112, 113))
@@ -133,12 +133,16 @@ class Play(Scene):
             else:
                 Play.EndLb.text = "YOU'RE WON"
                 Play.EndLb.color = "green"
+
             for e in Play.spawner:
                 e.kill()
             for c in Play.endPanel:
                 c.draw(screen)
+
+            Play.recording.save()
+
             if Play.BackBtn.isClicked():
-                login.coins += Play.recording.curWave * 10
+                login.coins += min(Play.recording.curWave, len(WAVE_STAT[Play.recording.mode]))  * 10
                 return Scenes.MENU
         else:
             if pg.time.get_ticks() - Play.time_goal > setting.spawn_cooldown:
@@ -232,26 +236,25 @@ class Play(Scene):
             if len(Play.recording.towerGroup) == 0:
                 Play.towerUpdating = None
 
-            # show the the bound
+            # show the bound
             for t in Play.recording.towerGroup:
                 t.isFocus = False
-            if Play.towerUpdating is not None:
-                Play.towerUpdating.isFocus = True
-
-            # Tower attacking
-            for t in Play.recording.towerGroup:
+                # Tower attacking
                 t.attack(Play.spawner)
 
             if Play.towerUpdating is None:
                 Play.UGPbx.img_path = "src/assets/EasyLevelBG.png"
                 Play.UGPrice.text = "$$$"
-            elif Play.towerUpdating.levelUp == "MAX":
-                Play.UGPrice.text = "LV. MAX"
-            elif Play.UGBT.isClicked() and \
-                    Play.recording.budget >= int(Play.towerUpdating.levelUp):
-                Play.recording.budget -= Play.towerUpdating.levelUp
-                Play.towerUpdating.updateTower()
-                Play.UGPrice.text = f"${Play.towerUpdating.levelUp}"
+            else:
+                Play.towerUpdating.isFocus = True
+
+                if Play.towerUpdating.levelUp == "MAX":
+                    Play.UGPrice.text = "LV. MAX"
+                elif Play.UGBT.isClicked() and \
+                        Play.recording.budget >= int(Play.towerUpdating.levelUp):
+                    Play.recording.budget -= Play.towerUpdating.levelUp
+                    Play.towerUpdating.updateTower()
+                    Play.UGPrice.text = f"${Play.towerUpdating.levelUp}"
         return None
 
     @staticmethod

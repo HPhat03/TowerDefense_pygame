@@ -52,8 +52,10 @@ class Menu(Scene):
             c.displayEffect()
 
         if Menu.QuitButton.isClicked():
+            login.update()
             db.close()
             quit()
+
         if login.isAuth:
             if login.name != Menu.NameTextbox.text:
                 login.update(coins=True, team=True, inventory=True)

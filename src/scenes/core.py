@@ -28,12 +28,14 @@ class Scene:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    login.update()
                     db.close()
                     quit()
                 elif event.type == pygame.KEYDOWN:
                     if event.mod & pygame.KMOD_CTRL and \
                             (event.key == pygame.K_w or
                                 event.key == pygame.K_q):
+                        login.update()
                         db.close()
                         quit()
                     else:

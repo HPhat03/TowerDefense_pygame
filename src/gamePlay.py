@@ -1,4 +1,5 @@
 from src.data.EnemyConfig import WAVE_STAT
+from src import db
 
 
 class Record:
@@ -12,6 +13,7 @@ class Record:
         self.towerGroup = []
         self.mode = mode
         self.enemyGroup = []
+        self.isSave: bool = False
 
     def loadMap(self, surface):
         self.map.load(surface)
@@ -25,7 +27,15 @@ class Record:
 
     def process_enemies(self):
         if self.curWave <= len(WAVE_STAT[self.mode]):
-            enemyAmount = WAVE_STAT[self.mode][str(self.curWave)]
+            enemyAmount = WAVE_STAT[self.mode][self.curWave - 1]
             for enemy_type in enemyAmount:
                 for _ in range(enemyAmount[enemy_type]):
                     self.enemyGroup.append(enemy_type)
+
+    def save(self):
+        if self.isSave:
+            return
+
+        db.execute("insert into Record values (?, ?, ?, ?)",
+                   (self.map.id, self.login.id, self.curWave, self.mode))
+        self.isSave = True
