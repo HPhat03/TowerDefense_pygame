@@ -46,7 +46,6 @@ class Tower:
     def __eq__(self, other):
         if not isinstance(other, Tower):
             return NotImplemented
-
         return self.id == other.id
 
     def isPlaceable(self, record, x, y):

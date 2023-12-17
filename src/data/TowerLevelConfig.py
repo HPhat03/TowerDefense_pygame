@@ -30,7 +30,6 @@ TowerStat = {
             "bound" : 160,
             "levelUp": "MAX"
         },
-
     },
     "sniper" : {
         "1" : {
@@ -63,6 +62,5 @@ TowerStat = {
             "bound" : 300,
             "levelUp": "MAX"
         },
-
     }
 }
