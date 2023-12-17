@@ -53,11 +53,12 @@ class Play(Scene):
     # STATE PANEL
     statePs = pg.sprite.Group()
     waveLabel = Label(10, 60, 150, 50, "Wave 0", color="white")
+    btnSkip = Button(setting.WINDOW_WIDTH - 170 - setting.RIGHT_BAR, 70, 150, 40, "SKIP")
     MaxHPBar = Label(10, 10, setting.WINDOW_WIDTH - 30 - setting.RIGHT_BAR, 50,
                      "", "red", border_radius=10)
     CurHPBar = Label(10, 10, setting.WINDOW_WIDTH - 30 - setting.RIGHT_BAR, 50,
                      "", "green", border_radius=10)
-    statePs.add(MaxHPBar, waveLabel, CurHPBar)
+    statePs.add(MaxHPBar, waveLabel, CurHPBar, btnSkip)
     statePanel = ControlsContainer(0, setting.WINDOW_HEIGHT - setting.BOT_BAR,
                                    statePs, 10, (113, 112, 113))
 
@@ -142,20 +143,30 @@ class Play(Scene):
             Play.recording.save()
 
             if Play.BackBtn.isClicked():
-                login.coins += min(Play.recording.curWave, len(WAVE_STAT[Play.recording.mode]))  * 10
+                login.coins += min(Play.recording.curWave, len(WAVE_STAT[Play.recording.mode])) * 10
                 return Scenes.MENU
         else:
             if pg.time.get_ticks() - Play.time_goal > setting.spawn_cooldown:
                 if Play.spawned < len(Play.recording.enemyGroup):
-                    e1 = Enemy(str(Play.recording.enemyGroup[Play.spawned]),
-                               Play.recording.map.waypoints)
-                    Play.spawner.add(e1)
+                    Play.spawner.add(
+                        Enemy(str(Play.recording.enemyGroup[Play.spawned]),
+                              Play.recording.map.waypoints))
                     Play.spawned += 1
                     Play.time_goal = pg.time.get_ticks()
-                if len(Play.spawner) == 0 or Play.waveLabel.isClicked():
+                if len(Play.spawner) == 0:
                     Play.recording.curWave += 1
                     Play.recording.budget += (Play.recording.curWave - 1) * 75
                     Play.recording.process_enemies()
+
+            credentials = (
+                Play.btnSkip.isClicked(),
+                Play.recording.curWave < len(WAVE_STAT[Play.recording.mode]),
+                Play.spawned == len(Play.recording.enemyGroup)
+            )
+            if all(credentials) :
+                Play.recording.curWave += 1
+                Play.recording.budget += (Play.recording.curWave - 1) * 75
+                Play.recording.process_enemies()
 
             mousePos = pg.mouse.get_pos()
             tile_x = mousePos[0] // setting.MAP_TILE_SIZE

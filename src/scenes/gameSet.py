@@ -12,6 +12,7 @@ class GameMode:
     EASY = 0
     MEDIUM = 1
 
+
 class Game(Scene):
 
     EzBg = pg.image.load("src/assets/EasyLevelBG.png")

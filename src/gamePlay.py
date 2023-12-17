@@ -29,8 +29,7 @@ class Record:
         if self.curWave <= len(WAVE_STAT[self.mode]):
             enemyAmount = WAVE_STAT[self.mode][self.curWave - 1]
             for enemy_type in enemyAmount:
-                for _ in range(enemyAmount[enemy_type]):
-                    self.enemyGroup.append(enemy_type)
+                self.enemyGroup.extend([enemy_type] * enemyAmount[enemy_type])
 
     def save(self):
         if self.isSave:
