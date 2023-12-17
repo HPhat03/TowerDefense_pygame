@@ -56,7 +56,7 @@ class Menu(Scene):
             quit()
         if login.isAuth:
             if login.name != Menu.NameTextbox.text:
-                login.update(coins=True, team = True, inventory = True)
+                login.update(coins=True, team=True, inventory=True)
                 print("saved")
                 login.isAuth = False
         if login.isAuth is False:

@@ -1,5 +1,3 @@
-import pygame as pg
-
 from src import db
 from src.Tower import Tower
 
@@ -14,7 +12,8 @@ class Player:
         self.team = []
 
     def authenticate(self, name):
-        if name == "": return
+        if name == "":
+            return
 
         players = db.select("select * from Player where name = ?", (name, ))
 
@@ -37,17 +36,23 @@ class Player:
 
             self.team = []
             for i in range(5):
-                if idTeams[i] != None:
-                   tower = Tower(idTeams[i])
-                   self.team.append(tower)
+                if idTeams[i] is not None:
+                    tower = Tower(idTeams[i])
+                    self.team.append(tower)
 
             self.inventory = []
-            self.idInventory = db.select(("SELECT idTower FROM Player INNER JOIN Player_Towers ON Player.id = Player_Towers.idPlayer WHERE Player.name = ?"),(self.name,))
+            self.idInventory = db.select("""
+                SELECT idTower
+                FROM Player INNER JOIN Player_Towers
+                    ON Player.id = Player_Towers.idPlayer
+                WHERE Player.name = ?
+                """, (self.name, ))
             for i in self.idInventory:
                 tower = Tower(i[0])
                 self.inventory.append(tower)
 
-    def update(self, team = False, inventory = False, coins = False):
+    def update(self, team: bool = False, inventory: bool = False,
+               coins: bool = False):
         if coins:
             db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?;", (self.coins, self.name, ))
         if team:
@@ -62,7 +67,7 @@ class Player:
                         break
                     else:
                         insertable = True
-                        print (j[0], self.inventory[i].id)
+                        print(j[0], self.inventory[i].id)
                 if insertable:
                     db.execute("INSERT INTO Player_Towers(idPlayer, idTower) VALUES (?,?);", (self.id,self.inventory[i].id, ))
 

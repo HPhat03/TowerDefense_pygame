@@ -7,7 +7,6 @@ from src.setting import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class Inventory(Scene):
-
     background = pygame.image.load("src/assets/InventoryBG.png")
 
     btnBack = PictureBox(20, 20, 100, 50, "src/assets/Logo.png")
@@ -20,11 +19,11 @@ class Inventory(Scene):
     boxGr = []
     for i in range(2):
         for j in range(6):
-            itembox = ItemBox( (j+1)*2*17 + 120 * j, 230 + 200 *i, 120,
-                      image_path="src/assets/MediumLevelBG.png",
-                      text="")
+            itembox = ItemBox((j + 1) * 34 + 120 * j, 230 + 200 * i, 120,
+                              image_path="src/assets/MediumLevelBG.png",
+                              text="")
             boxGr.append(itembox)
-    #towers = Tower.get_all()
+    # towers = Tower.get_all()
     controls = pygame.sprite.Group()
     team_towers = []
 
@@ -70,7 +69,7 @@ class Inventory(Scene):
         team = login.team
         for b in Inventory.boxGr:
             b.draw(screen)
-            
+
             if b.isClicked():
                 isFreeTeam = True
 

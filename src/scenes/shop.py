@@ -8,7 +8,7 @@ from src.Tower import Tower
 
 
 class Shop(Scene):
-    #INIT CONTROLS
+    # INIT CONTROLS
     background = pygame.image.load("src/assets/shop_bg.jpg")
     controls = pygame.sprite.Group()
     # list_towers = pygame.sprite.Group()
@@ -19,16 +19,17 @@ class Shop(Scene):
 
     surf = Surface(20, 80, WINDOW_WIDTH - 40, WINDOW_HEIGHT - 110,
                    (0, 0, 0, 128))
-    lb_coin = Label(WINDOW_WIDTH-20-100,20,100,40, "", color="yellow")
+    lb_coin = Label(WINDOW_WIDTH - 20 - 100, 20, 100, 40, "", color="yellow")
 
     boxGr = []
     for i in range(2):
         for j in range(5):
-            itembox = ItemBox(70 + 160 * j, 100 + 230 *i, 150,
-                      image_path="src/assets/MediumLevelBG.png",
-                      text="")
+            itembox = ItemBox(70 + 160 * j, 100 + 230 * i, 150,
+                              image_path="src/assets/MediumLevelBG.png",
+                              text="")
             boxGr.append(itembox)
-    #Getting Towers data
+
+    # Getting Towers data
     shop = []
     itemids = db.select("select id from Tower")
     for i in itemids:
@@ -53,7 +54,6 @@ class Shop(Scene):
         Shop.lb_coin.text = f"Coins: {login.coins}"
         towers = [i for i in Shop.shop if i.in_shop_price > 0 and i not in
                   login.inventory]
-        # towers = [i for i in Shop.shop if i.in_shop_price > 0 and not login.hadTower(i)]
 
         for i in range(len(towers)):
             Shop.boxGr[i].pictureBox.img_path = towers[i].img_src
@@ -61,21 +61,20 @@ class Shop(Scene):
             Shop.boxGr[i].subText.text = f"${towers[i].in_shop_price}"
             Shop.boxGr[i].item = towers[i]
 
-        #drawing session
+        # drawing session
         for c in Shop.controls:
             c.draw(screen)
         for b in Shop.boxGr:
-            if b.item != None:
+            if b.item is not None:
                 b.draw(screen)
 
-        #Event session
+        # Event session
         for box in Shop.boxGr:
-            if box.item != None:
-                if box.isClicked() and login.coins>= box.item.in_shop_price:
+            if box.item is not None:
+                if box.isClicked() and login.coins >= box.item.in_shop_price:
                     login.coins -= box.item.in_shop_price
                     login.inventory.append(box.item)
                     Shop.boxGr[i].item = None
-
 
         if Shop.btnBack.isClicked():
             return Scenes.MENU

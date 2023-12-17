@@ -170,7 +170,7 @@ class ItemBox(Control):
                  text: str = "Item Box", subtext: str = "",
                  bgcolor: ColorValue = "black",
                  color: ColorValue = "white", subcolor: ColorValue = "yellow",
-                 padding: int = 5, boder_radius: int = 0, item = None):
+                 padding: int = 5, boder_radius: int = 0, item=None):
         super().__init__(left, top, width, width, text, bgcolor, color)
         self.img = image_path
         self.subtext = subtext
@@ -212,9 +212,6 @@ class ItemBox(Control):
                      border_radius=self.radius)
         for c in self.controls:
             c.draw(surface)
-
-
-
 
 
 class ControlsContainer(Control):

@@ -30,7 +30,8 @@ class Game(Scene):
         teamTowers.append(box)
     container = ControlsContainer(350, 100, teamTowers, padding, "grey")
 
-    Map_Loader = PictureBox(350, container.rect.top + 200, container.rect.width, 300, "")
+    Map_Loader = PictureBox(350, container.rect.top + 200,
+                            container.rect.width, 300, "")
     nextBt = Button(Map_Loader.rect.left + Map_Loader.rect.width/2 + 175,
                     Map_Loader.rect.top + Map_Loader.rect.height + 10,
                     50, 50, ">", 25, button_color, "white")
@@ -44,13 +45,15 @@ class Game(Scene):
     controls = pg.sprite.Group()
     map_index = 0
 
-    panel = pg.Rect(container.rect.left -25, container.rect.top - 10, container.rect.width + 50, nextBt.rect.bottom - 80)
+    panel = pg.Rect(container.rect.left - 25, container.rect.top - 10,
+                    container.rect.width + 50, nextBt.rect.bottom - 80)
     panel_color = EzBt.background_color
     controls.add(Backpic, LvLabel, EzBt, MdBt, PlayBt, container,
                  Map_Loader, nextBt, preBt, MapNameLb)
 
-    #other
-    mode= "easy"
+    # other
+    mode = "easy"
+
     @staticmethod
     def event_handler(event):
         if event.type == pg.KEYDOWN:

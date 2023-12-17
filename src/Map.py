@@ -29,9 +29,8 @@ class Map(pg.sprite.Sprite):
                         for p in o["polyline"]:
                             x = p.get("x") + dx
                             y = p.get("y") + dy
-                            self.waypoints.append((x,y))
+                            self.waypoints.append((x, y))
 
     def load(self, surface):
-        surface.blit(self.image, (0,0))
+        surface.blit(self.image, (0, 0))
         # pg.draw.lines(surface,"black",False,self.waypoints,2)
-
