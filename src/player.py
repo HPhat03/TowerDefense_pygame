@@ -32,32 +32,33 @@ class Player:
             self.password = player[2]
             self.coins = player[3]
             self.active = True
-            idTeams = db.select(("SELECT idTower1, idTower2, idTower3, idTower4, idTower5 FROM Player INNER JOIN Player_Team on Player_Team.idPlayer = Player.id WHERE Player.name = ?"), (self.name, ))[0]
+            idTeams = db.select("""
+                SELECT idTower1, idTower2, idTower3, idTower4, idTower5
+                FROM Player INNER JOIN Player_Team
+                    ON Player_Team.idPlayer = Player.id WHERE Player.name = ?
+            """, (self.name, ))[0]
 
-            self.team = []
-            for i in range(5):
-                if idTeams[i] is not None:
-                    tower = Tower(idTeams[i])
-                    self.team.append(tower)
-
-            self.inventory = []
             self.idInventory = db.select("""
                 SELECT idTower
                 FROM Player INNER JOIN Player_Towers
                     ON Player.id = Player_Towers.idPlayer
                 WHERE Player.name = ?
                 """, (self.name, ))
-            for i in self.idInventory:
-                tower = Tower(i[0])
-                self.inventory.append(tower)
+
+            self.team = [Tower(idTeams[i]) for i in range(5)
+                         if idTeams[i] is not None]
+            self.inventory = [Tower(i[0]) for i in self.idInventory]
 
     def update(self, team: bool = True, inventory: bool = True,
                coins: bool = True):
         if coins:
-            db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?;", (self.coins, self.name, ))
+            db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?",
+                       (self.coins, self.name))
         if team:
             for i in range(len(self.team)):
-                db.execute(f"UPDATE Player_Team SET idTower{i+1} = ? WHERE idPlayer = ?", (self.team[i].id, self.id,))
+                db.execute(f"""
+                    UPDATE Player_Team SET idTower{i+1} = ? WHERE idPlayer = ?
+                """, (self.team[i].id, self.id))
         if inventory:
             insertable = False
             for i in range(len(self.inventory)):
@@ -69,7 +70,9 @@ class Player:
                         insertable = True
                         print(j[0], self.inventory[i].id)
                 if insertable:
-                    db.execute("INSERT INTO Player_Towers(idPlayer, idTower) VALUES (?,?);", (self.id,self.inventory[i].id, ))
+                    db.execute(
+                        ("INSERT INTO Player_Towers(idPlayer, idTower) "
+                         "VALUES (?,?)"), (self.id, self.inventory[i].id))
 
     def __str__(self):
         return f"name: {self.name}\ncoins: {self.coins}"

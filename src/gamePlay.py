@@ -8,7 +8,7 @@ class Record:
         self.login = login
         self.team = self.login.team.copy()
         self.HP = 100
-        self.budget = 5000
+        self.budget = 500
         self.curWave = 1
         self.towerGroup = []
         self.mode = mode

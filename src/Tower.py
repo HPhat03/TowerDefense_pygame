@@ -49,7 +49,8 @@ class Tower:
         return self.id == other.id
 
     def isPlaceable(self, record, x, y):
-        if record.map.map_data[y * setting.MAP_WIDTH_TILE + x] == record.map.path:
+        if record.map.map_data[y * setting.MAP_WIDTH_TILE + x] == \
+                record.map.path:
             return False
         for i in record.towerGroup:
             if i.tile_x == x and i.tile_y == y:
@@ -141,16 +142,12 @@ class NormalScout(BattleTower):
 
         if self.enemyQueue:
             self.resort()
-            for t in self.enemyQueue:
-                print(t.HP, t.type)
-            print("end")
             target = self.enemyQueue[0]
 
             x = self.pos[0] - target.pos[0]
             y = self.pos[1] - target.pos[1]
 
             if pg.time.get_ticks() - self.timeStart > self.speed*1000:
-                print(target.HP, target.type)
                 self.angle = math.degrees(math.atan2(-y, x)) + 90
                 self.timeStart = pg.time.get_ticks()
                 if self.atk >= target.HP:
@@ -165,4 +162,3 @@ def getDistance(a, b):
     x = b.pos[0] - a.pos[0]
     y = b.pos[1] - a.pos[1]
     return math.sqrt(x*x + y*y)
-

@@ -10,13 +10,11 @@ class Enemy(pg.sprite.Sprite):
 
         pg.sprite.Sprite.__init__(self)
 
-        # print(ENEMY_TYPES[enemy_type]
         Enemy = db.select("SELECT * FROM ENEMY WHERE id = ?",
                           (ENEMY_TYPES[enemy_type], ))
 
         for type in Enemy:
             if type[1] == enemy_type:
-                # print(type)
                 self.type = type[1]
                 self.img_src = type[2]
                 self.HP = type[3]
@@ -74,7 +72,7 @@ class Enemy(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
-    def update(self, *args, **kwargs):
+    def update(self):
         if self.HP <= 0:
             if self.awarded:
                 self.kill()
