@@ -19,14 +19,14 @@ TowerStat = {
             "levelUp": 500
         },
         "4" : {
-            "atk" : 5,
-            "speed": 1,
+            "atk" : 4,
+            "speed": 1.25,
             "bound" : 140,
             "levelUp": 1000
         },
         "5" : {
-            "atk" : 8,
-            "speed": 0.5,
+            "atk" : 6,
+            "speed": 0.75,
             "bound" : 160,
             "levelUp": "MAX"
         },
