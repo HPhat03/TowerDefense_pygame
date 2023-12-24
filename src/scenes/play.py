@@ -129,11 +129,12 @@ class Play(Scene):
 
         if Play.recording.HP <= 0 or Play.recording.curWave > len(WAVE_STAT[Play.recording.mode]):
             if Play.recording.HP <= 0:
-                Play.EndLb.text = "YOU'RE LOST!"
+                Play.EndLb.text = "LOST!"
                 Play.EndLb.color = "red"
             else:
-                Play.EndLb.text = "YOU'RE WON"
-                Play.EndLb.color = "green"
+                Play.EndLb.text = "VICTORY"
+                Play.EndLb.color = "yellow"
+                Play.waveLabel.text = f"END"
 
             for e in Play.spawner:
                 e.kill()
