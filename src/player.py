@@ -19,14 +19,7 @@ class Player:
 
         players = db.select("select * from Player where name = ?", (name, ))
 
-        if len(players) != 1 or players[0][4] != 1:
-            self.isAuth = False
-            self.name = None
-            self.password = None
-            self.coins = 0
-            self.active = False
-            self.team = []
-        else:
+        if len(players) == 1 and players[0][4] == 1:
             player = players[0]
             self.isAuth = True
             self.id = player[0]
@@ -34,11 +27,17 @@ class Player:
             self.password = player[2]
             self.coins = player[3]
             self.active = True
+
             idTeams = db.select("""
                 SELECT idTower1, idTower2, idTower3, idTower4, idTower5
                 FROM Player INNER JOIN Player_Team
                     ON Player_Team.idPlayer = Player.id WHERE Player.name = ?
-            """, (self.name, ))[0]
+            """, (self.name, ))
+            if len(idTeams) == 0:
+                db.execute("INSERT INTO Player_Team(idPlayer) VALUES(?)", (self.id, ))
+                idTeams = (None, ) * 5
+            else:
+                idTeams = idTeams[0]
 
             self.idInventory = db.select("""
                 SELECT idTower
