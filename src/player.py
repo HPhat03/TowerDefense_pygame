@@ -6,10 +6,12 @@ class Player:
     def __init__(self):
         self.name = None
         self.password = None
+        self.id = None
         self.coins = 0
         self.active = False
         self.isAuth = False
         self.team = []
+        self.inventory = []
 
     def authenticate(self, name):
         if name == "":
@@ -51,6 +53,9 @@ class Player:
 
     def update(self, team: bool = True, inventory: bool = True,
                coins: bool = True):
+        if self.id is None:
+            return
+
         if coins:
             db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?",
                        (self.coins, self.name))
