@@ -13,6 +13,8 @@ WAVE_STAT = [
         { "Normal": 7, "Fast": 5 },
         { "Strong": 3 },
         { "Strong": 5 },
+        {"Normal": 5, "Fast": 5, "Strong": 3},
+        {"Normal": 5, "Fast": 5, "Strong": 5}
     ],
     # Medium
     []

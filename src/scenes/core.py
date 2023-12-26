@@ -5,6 +5,7 @@ from src import db
 
 
 class Scenes:
+    LOG = 0
     MENU = 1
     GAME = 2
     SHOP = 3

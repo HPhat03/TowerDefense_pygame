@@ -16,8 +16,8 @@ for map in db.select("SELECT * FROM Map"):
 def main():
     from .setting import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
     from .player import Player
-    from .scenes import Scenes, Game, Menu, Shop, Inventory, Play
-    scene = Scenes.MENU
+    from .scenes import Scenes, Game, Menu, Shop, Inventory, Play, LogPage
+    scene = Scenes.LOG
 
     pygame.display.set_caption("Tower Defense 2D")
     icon = pygame.image.load('src/assets/icon.jpg')
@@ -26,8 +26,9 @@ def main():
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     while True:
         clock.tick(FPS)
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (30, 30)
         match scene:
+            case Scenes.LOG:
+                scene = LogPage.run(screen, login)
             case Scenes.MENU:
                 scene = Menu.run(screen, login)
             case Scenes.GAME:

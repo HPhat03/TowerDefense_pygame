@@ -13,11 +13,11 @@ class Player:
         self.team = []
         self.inventory = []
 
-    def authenticate(self, name):
+    def authenticate(self, name, password):
         if name == "":
             return
 
-        players = db.select("select * from Player where name = ?", (name, ))
+        players = db.select("select * from Player where name = ? and password = ?", (name, password,  ))
 
         if len(players) == 1 and players[0][4] == 1:
             player = players[0]
@@ -45,7 +45,7 @@ class Player:
                     ON Player.id = Player_Towers.idPlayer
                 WHERE Player.name = ?
                 """, (self.name, ))
-
+            print(idTeams)
             self.team = [Tower(idTeams[i]) for i in range(5)
                          if idTeams[i] is not None]
             self.inventory = [Tower(i[0]) for i in self.idInventory]
@@ -59,6 +59,11 @@ class Player:
             db.execute("UPDATE Player SET coins = ? WHERE Player.name = ?",
                        (self.coins, self.name))
         if team:
+            print(self.team)
+            for i in range(5):
+                db.execute(f"""
+                        UPDATE Player_Team SET idTower{i + 1} = NULL WHERE idPlayer = ?
+                """, (self.id, ))
             for i in range(len(self.team)):
                 db.execute(f"""
                     UPDATE Player_Team SET idTower{i+1} = ? WHERE idPlayer = ?
